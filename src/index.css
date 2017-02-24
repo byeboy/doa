@@ -1,0 +1,53 @@
+
+html, body, :global(#root) {
+  height: 100%;
+}
+
+:global(.fr) {
+  float: right;
+  margin-right: 3%;
+}
+
+:global(.txtr) {
+  text-align: right;
+}
+
+:global(.ant-row) {
+  margin: 20px -8px;
+}
+
+:global(.ant-col) {
+  margin: 20px -8px;
+}
+
+:global(.actionIcon) {
+  cursor: pointer;
+  font-weight: 800;
+/*  margin: 0 10px;*/
+}
+
+:global(span.doer) {
+  margin: 0 3px;
+  background: cornflowerblue;
+  color: aliceblue;
+}
+
+:global(.primary) {
+  color: blue;
+}
+
+:global(.info) {
+  color: cornflowerblue;
+}
+
+:global(.success) {
+  color: limegreen;
+}
+
+:global(.warning) {
+  color: orange;
+}
+
+:global(.danger) {
+  color: red;
+}
