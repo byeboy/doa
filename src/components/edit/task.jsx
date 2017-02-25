@@ -1,75 +1,193 @@
 import React, { Component, PropTypes } from 'react'
-import { Modal, Button, Icon, Form, Input } from 'antd'
+import { Modal, Button, Icon, Form, Input, DatePicker, Select } from 'antd'
+import moment from 'moment'
 
 class TaskEditer extends Component{
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      name: '',
-      intro: '',
-      
     }
   }
-  
+  initDoer = (users) => {
+    let userIdArray = [];
+    if(users !== null) {
+      users.map(item => {
+        userIdArray.push(item.id.toString());
+      })
+    }
+    return userIdArray;
+  }
   render() {
-    const { onCreate, onUpdate, handleCancel, modal2Edit, item2Edit } = this.props;
-    const { loading } = this.state;
+    const { onCreate, onUpdate, handleCancel, modal2Edit, item2Edit, loading2Modal } = this.props;
     const handleOk = (e) => {
       e.preventDefault();
-      this.props.form.validateFields((err, values) => {
+      this.props.form.validateFields((err, fieldsValue) => {
         if (!err) {
-          this.setState({
-            loading: true
-          });
+          const values = {
+            ...fieldsValue,
+            'deadline': fieldsValue['deadline'].format('YYYY-MM-DD HH:mm:ss'),
+          };
           if(item2Edit === null){
-            console.log('Create: ', values)
+            onCreate(values);
+            this.props.form.resetFields();
+          } else {
+            onUpdate(values);
+            this.props.form.resetFields();
           }
-          console.log('Update: ', values);
         }
       });
     };
-    const { getFieldDecorator } = this.props.form;
+    const onCancel = (e) => {
+      handleCancel();
+      this.props.form.resetFields();
+    };
+    const { getFieldDecorator, resetFields } = this.props.form;
+    const formItemLayout = {
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
+    };
+    const selectOpts = [];
+    for (let i = 0; i < 26; i++) {
+      selectOpts.push(<Select.Option key={i}>{'user'+i.toString(36)}</Select.Option>);
+    }
     return (
       <Modal title={item2Edit === null ? '发布新任务':'编辑任务'} 
              visible={modal2Edit}
-             onCancel={handleCancel}
+             onCancel={onCancel}
              footer={[
                 <Button key="back" size="large" onClick={handleCancel}>关闭</Button>,
-                <Button key="submit" type="primary" size="large" loading={loading} onClick={handleOk}>
+                <Button key="submit" type="primary" size="large" loading={loading2Modal} onClick={handleOk}>
                   {item2Edit === null ? '确认发布':'保存更改'} 
                 </Button>,
               ]}
       >
         {item2Edit === null ? 
           
-      <Form onSubmit={this.handleSubmit} className="login-form">
-        <Form.Item>
-          {getFieldDecorator('userName', {
-            rules: [{ required: true, message: 'Please input your username!' }],
-          })(
-            <Input addonBefore={<Icon type="user" />} placeholder="Username" />
-          )}
-        </Form.Item>
-        <Form.Item>
-          {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your Password!' }],
-          })(
-            <Input addonBefore={<Icon type="lock" />} type="password" placeholder="Password" />
-          )}
-        </Form.Item>
-      </Form> :
-          <div>
-            <div style={{ marginBottom: 16 }}>
-              <Input addonBefore="Http://" addonAfter=".com" defaultValue={item2Edit.name} />
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <Input defaultValue="mysite" />
-            </div>
-            <div style={{ marginBottom: 16 }}>
-              <Input addonAfter={<Icon type="setting" />} defaultValue="mysite" />
-            </div>
-          </div>
+          <Form onSubmit={this.handleSubmit} >
+            <Form.Item
+              {...formItemLayout}
+              label="名称"
+              >
+              {getFieldDecorator('name', {
+                rules: [{ required: true, message: '任务名称不可为空' }],
+                initialValue: null,
+              })(
+                <Input placeholder="请输入任务名称" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="简述"
+              >
+              {getFieldDecorator('intro', {
+                initialValue: null,
+              })(
+                <Input placeholder="建议输入任务简述" />  
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="详细要求"
+              >
+              {getFieldDecorator('content', {
+                rules: [{ required: true, message: '任务要求不可为空' }],
+                initialValue: null,
+              })(
+                <Input placeholder="请输入任务的详细要求" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="最后期限"
+             >
+              {getFieldDecorator('deadline', {
+                rules: [{ type: 'object', required: true, message: '请为任务设置最后期限' }],
+                initialValue: null,
+              })(
+                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="执行者"
+              >
+              {getFieldDecorator('users', {
+                rules: [{ required: true, message: '执行者不可为空' }],
+                initialValue: [],
+              })(
+                <Select
+                  multiple
+                  style={{ width: '100%' }}
+                  placeholder="请指定人员来执行该任务"
+                >
+                  {selectOpts}
+                </Select>
+              )}
+            </Form.Item>
+          </Form> :
+          <Form onSubmit={this.handleSubmit} >
+            <Form.Item
+              {...formItemLayout}
+              label="名称"
+              >
+              {getFieldDecorator('name', {
+                rules: [{ required: true, message: '任务名称不可为空' }],
+                initialValue: item2Edit.name,
+              })(
+                <Input placeholder="请输入任务名称" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="简述"
+              >
+              {getFieldDecorator('intro', {
+                initialValue: item2Edit.intro,
+              })(
+                <Input placeholder="建议输入任务简述" />  
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="详细要求"
+              >
+              {getFieldDecorator('content', {
+                rules: [{ required: true, message: '任务要求不可为空' }],
+                initialValue: item2Edit.content,
+              })(
+                <Input placeholder="请输入任务的详细要求" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="最后期限"
+             >
+              {getFieldDecorator('deadline', {
+                rules: [{ type: 'object', required: true, message: '请为任务设置最后期限' }],
+                initialValue: moment(item2Edit.deadline, "YYYY-MM-DD HH:mm:ss")
+              })(
+                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+              )}
+            </Form.Item>
+            <Form.Item
+              {...formItemLayout}
+              label="执行者"
+              >
+              {getFieldDecorator('users', {
+                rules: [{ required: true, message: '执行者不可为空' }],
+                initialValue: this.initDoer(item2Edit.users),
+              })(
+                <Select
+                  multiple
+                  style={{ width: '100%' }}
+                  placeholder="请指定人员来执行该任务"
+                >
+                  {selectOpts}
+                </Select>
+              )}
+            </Form.Item>
+          </Form>
         }
       </Modal>
     );
@@ -85,6 +203,7 @@ TaskEditer.propTypes = {
 //  content: PropTypes.any.isRequired,
   onCreate: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  loading2Modal: PropTypes.bool.isRequired,
 }
 
 export default Form.create()(TaskEditer)

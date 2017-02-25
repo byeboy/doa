@@ -8,6 +8,10 @@ html, body, :global(#root) {
   margin-right: 3%;
 }
 
+:global(.fr>i) {
+  margin: 0 3px;
+}
+
 :global(.txtr) {
   text-align: right;
 }

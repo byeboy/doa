@@ -37,24 +37,37 @@ const searchProps = {
   },
 }
 
+
+
 function Tasks({ dispatch, loading, task}) {
-  const { todos, dones, posts, modal2Edit, item2Edit } = task;
+  const { todos, dones, posts, modal2Edit, item2Edit, loading2Modal } = task;
   const editProps = {
     modal2Edit,
     item2Edit,
+    loading2Modal,
     handleCancel(){
       dispatch({
         type: 'task/hideModal2Edit',
       });
     },
-    onCreate(params){
+    onCreate(values){
       dispatch({
-        type:'',
+        type:'task/save',
+        payload: {
+          values: {
+            ...values,
+            poster_id: 1,
+          },
+        }
       })
     },
-    onUpdate(params){
+    onUpdate(values){
       dispatch({
-        type:'',
+        type:'task/update',
+        payload: {
+          id: item2Edit.id,
+          values: values,
+        }
       })
     },
   }
@@ -64,7 +77,7 @@ function Tasks({ dispatch, loading, task}) {
         type: 'task/patch',
         payload: {
           id: id,
-          param: {
+          values: {
             'status': 5,
           },
         }
@@ -75,7 +88,7 @@ function Tasks({ dispatch, loading, task}) {
         type: 'task/patch',
         payload: {
           id: id,
-          param: {
+          values: {
             'status': 1,
           },
         }
@@ -86,7 +99,7 @@ function Tasks({ dispatch, loading, task}) {
         type: 'task/patch',
         payload: {
           id: id,
-          param: {
+          values: {
             'status': 9,
           },
         }
@@ -175,10 +188,16 @@ function Tasks({ dispatch, loading, task}) {
               >
               <Collapse defaultActiveKey={['1']} loading={loading}>
                 <Collapse.Panel header="待办事项" key="1">
-                  <Tasker {...todoProps} {...actionProps}/>
+                  {todos.length !== 0 ?
+                    <Tasker {...todoProps} {...actionProps}/> : 
+                    <div><Icon type="smile-o" />暂无待办事项</div>
+                  }
                 </Collapse.Panel>
                 <Collapse.Panel header="已完成待验收" key="2">
-                  <Tasker {...doneProps} {...actionProps}/>
+                  {dones.length !== 0 ?
+                    <Tasker {...doneProps} {...actionProps}/> : 
+                    <div><Icon type="smile-o" />暂无待验收的任务</div>
+                  }
                 </Collapse.Panel>
               </Collapse>
             </Card>
@@ -187,7 +206,10 @@ function Tasks({ dispatch, loading, task}) {
             <Card title={<b><Icon type="bars"/>我发布的</b>}
               loading={loading}
             >
-              <Tasker {...postProps} {...actionProps}/>
+              {posts.length !== 0 ?
+                <Tasker {...postProps} {...actionProps}/> : 
+                <div><Icon type="smile-o" />暂无需管理的任务</div>
+              }
             </Card>
           </Col>
         </Row>

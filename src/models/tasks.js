@@ -10,7 +10,10 @@ export default {
     posts: [],
     modal2View: false,
     modal2Edit: false,
-    item2Edit: {},
+    item2Edit: {
+      users: [],    //初始化任务执行者，避免报undefined错误
+    },
+    loading2Modal: false,
   },
   reducers: {
     querySuccess(state, action){
@@ -32,21 +35,76 @@ export default {
         modal2Edit: false,
       }
     },
+    showLoading(state){
+      return {
+        ...state,
+        loading2Modal: true,
+      }
+    },
+    hideLoading(state){
+      return {
+        ...state,
+        loading2Modal: false,
+      }
+    },
   },
   effects: {
-    *query({ payload }, {call, put}){
-      const { data } = yield call(serve.query);
+    *save({ payload }, {call, put}){
+      yield put({
+        type: 'showLoading',
+      });
+      const { values } = payload;
+      const { data } = yield call(serve.save, values);
       const { success, post, message } = data;
       if(success){
         message.success(message);
         yield put({
-          type: 'querySuccess',
-          payload: {
-            todos: post.todos,
-            dones: post.dones,
-            posts: post.posts,
-          },
-        })
+          type: 'query',
+        });
+      } else {
+        message.warning(message);
+      }
+      yield put({
+          type: 'hideLoading',
+        });
+      yield put({
+        type: 'hideModal2Edit',
+      });
+    },
+    *query({ payload }, {call, put}){
+      const { data } = yield call(serve.query);
+      const { success, post, message } = data;
+      console.log(post)   //证明任务信息分类在前端进行，减轻服务端负载
+      if(success){
+        message.success(message);
+        if(post.tasks.length != 0){
+          const todos = [];
+          const dones = [];
+          post.tasks.map(item => {
+            if(item.status <= 1) {
+              todos.push(item);
+            } else if(item.status <9) {
+              dones.push(item);
+            }
+          });
+          yield put({
+            type: 'querySuccess',
+            payload: {
+              todos: todos,
+              dones: dones,
+              posts: post.posts,
+            },
+          })
+        } else {
+          yield put({
+            type: 'querySuccess',
+            payload: {
+              todos: post.todos,
+              dones: post.dones,
+              posts: post.posts,
+            },
+          })
+        }
       } else {
         message.warning(message);
       }
@@ -65,8 +123,9 @@ export default {
       }
     },
     *patch({ payload }, {call, put}){
-      const { id, param } = payload;
+      const { id, values } = payload;
       const { data } = yield call(serve.patch, payload);
+      console.log(data)
       const { success, post, message } = data;
       if(success){
         message.success(message);
@@ -76,7 +135,33 @@ export default {
       } else {
         message.warning(message);
       }
-    }
+      yield put({
+        type: 'hideModal2Edit',
+      });
+    },
+    *update({ payload }, {call, put}){
+      yield put({
+        type: 'showLoading',
+      });
+      const { id, values } = payload;
+      const { data } = yield call(serve.update, payload);
+      console.log(data)
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'query',
+        })
+      } else {
+        message.warning(message);
+      }
+      yield put({
+        type: 'hideLoading',
+      });
+      yield put({
+        type: 'hideModal2Edit',
+      });
+    },
   },
   subscriptions: {
     setup({dispatch, history}) {

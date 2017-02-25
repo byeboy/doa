@@ -40,11 +40,11 @@ const getItem = function(taskArray, type, link, onDone, onRedo, onCheck, onDelet
           <Timeline.Item key={item.id} dot={item.status === 9? <Icon type="check-circle-o"  style={{ fontSize: 16 }}/>:'' } color={item.status >= 5? 'green':'blue'}>
             <p>
               <b><Link to={link+ item.id}>{item.name}</Link></b>
-              <Tooltip title="点击标记为完成">
-                <span className="fr">
+              <span className="fr">
+                <Tooltip title="点击标记为完成">
                   <Icon type="check" className="actionIcon success" onClick={(e)=>onDone(item.id)} />
-                </span>
-              </Tooltip>            
+                </Tooltip> 
+              </span>                         
             </p>
             <p>{item.intro}</p>
             <p>最后期限：{item.deadline}</p>
@@ -56,12 +56,12 @@ const getItem = function(taskArray, type, link, onDone, onRedo, onCheck, onDelet
         return (
           <Timeline.Item key={item.id} dot={item.status === 9? <Icon type="check-circle-o"  style={{ fontSize: 16 }}/>:'' } color={item.status >= 5? 'green':'blue'}>
             <p>
-              <b><Link to={link+ item.id}>{item.name}</Link></b>  
-              <Tooltip title="点击重做">
-                <span className="fr">
+              <b><Link to={link+ item.id}>{item.name}</Link></b> 
+              <span className="fr"> 
+                <Tooltip title="点击重做">
                   <Icon type="rollback" className="actionIcon warning" onClick={(e)=>onRedo(item.id)} />
-                </span>
-              </Tooltip>            
+                </Tooltip>  
+              </span>          
             </p>
             <p>{item.intro}</p>
             <p>最后期限：{item.deadline}</p>
@@ -73,29 +73,23 @@ const getItem = function(taskArray, type, link, onDone, onRedo, onCheck, onDelet
         return (
           <Timeline.Item key={item.id} dot={item.status === 9? <Icon type="check-circle-o"  style={{ fontSize: 16 }}/>:'' } color={item.status >= 5? 'green':'blue'}>
             <p>
-              <b><Link to={link+ item.id}>{item.name}</Link></b>  
-              {item.status !== 9 &&
-              <Tooltip title="点击确认验收">
-                <span className="fr">
+              <b><Link to={link+ item.id}>{item.name}</Link></b> 
+              <span className="fr"> 
+                {item.status !== 9 &&
+                <Tooltip title="点击确认验收">
                   <Icon type="check" className="actionIcon success" onClick={(e)=>onCheck(item.id)} />
-                </span>
-              </Tooltip> }
-              {item.status >= 5 && 
-              <Tooltip title="点击要求重做">
-                <span className="fr">
+                </Tooltip> }
+                {item.status >= 5 && 
+                <Tooltip title="点击要求重做">
                   <Icon type="rollback" className="actionIcon warning" onClick={(e)=>onRedo(item.id)} />
-                </span>
-              </Tooltip> }
-              <Tooltip title="点击删除">
-                <span className="fr">
-                  <Icon type="close" className="actionIcon danger" onClick={(e)=>onDelete(item.id)} />
-                </span>
-              </Tooltip>
-              <Tooltip title="点击编辑">
-                <span className="fr">
+                </Tooltip> }
+                <Tooltip title="点击编辑">
                   <Icon type="edit" className="actionIcon info" onClick={(e)=>onEdit(item)} />
-                </span>
-              </Tooltip>  
+                </Tooltip> 
+                <Tooltip title="点击删除">
+                  <Icon type="close" className="actionIcon danger" onClick={(e)=>onDelete(item.id)} />
+                </Tooltip>
+              </span> 
             </p>
             <p>{item.intro}</p>
             <p>
@@ -112,7 +106,6 @@ const getItem = function(taskArray, type, link, onDone, onRedo, onCheck, onDelet
 };
 
 function Tasker({content, type, link, onDone, onRedo, onCheck, onDelete, onEdit}) {
-  type = type || 'tasks';
   link = link || '/'+type;
   const demo = getItem(content, type, link, onDone, onRedo, onCheck, onDelete, onEdit);
   return (
