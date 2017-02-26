@@ -1,14 +1,23 @@
 import React, { PropTypes} from 'react'
-import { Collapse, Card, Icon } from 'antd'
+import { Collapse, Card, Icon, Tooltip } from 'antd'
 import { Link } from 'dva/router'
 
-const getItem = function(noticesArray, type, link) {
-  link = link+'/';
+const getItem = function(noticesArray, type, onDelete, onEdit) {
   return noticesArray.map(item => {
     if(type === 'notices') {
       return (
         <Collapse.Panel key={item.id} header={
-          <p>{item.title}<i className="fr">{item.intro}</i></p>}>
+            <p>{item.title} 【<i>{item.intro ? item.intro : '暂无描述'}</i>】
+              <span className="fr">
+                <Tooltip title="点击编辑">
+                  <Icon type="edit" className="actionIcon primary" onClick={(e)=>onEdit(item)} />
+                </Tooltip>
+                <Tooltip title="点击删除">
+                  <Icon type="close" className="actionIcon danger" onClick={(e)=>onDelete(item.id)} />
+                </Tooltip>
+              </span>
+            </p>
+          }>
           <p>{item.content}</p>
           <p className="txtr">
             <Icon type="user" />
@@ -25,10 +34,9 @@ const getItem = function(noticesArray, type, link) {
 };
 
 
-function Noticer({ content, type, link, loading }) {
+function Noticer({ content, type, onDelete, onEdit, loading }) {
   type = type || 'notices';
-  link = link || '/'+type;
-  const demo = getItem(content, type, link);
+  const demo = getItem(content, type, onDelete, onEdit);
   return (
     <Collapse accordion loading={loading}>
       {demo}
@@ -39,7 +47,8 @@ function Noticer({ content, type, link, loading }) {
 Noticer.propTypes = {
   content: PropTypes.array,
   type: PropTypes.string,
-  link: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
 }
 
 export default Noticer

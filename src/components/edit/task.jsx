@@ -5,9 +5,6 @@ import moment from 'moment'
 class TaskEditer extends Component{
   constructor(props){
     super(props);
-    this.state = {
-      loading: false,
-    }
   }
   initDoer = (users) => {
     let userIdArray = [];
@@ -42,7 +39,7 @@ class TaskEditer extends Component{
       handleCancel();
       this.props.form.resetFields();
     };
-    const { getFieldDecorator, resetFields } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 4 },
       wrapperCol: { span: 20 },
@@ -195,14 +192,11 @@ class TaskEditer extends Component{
 }
 
 TaskEditer.propTypes = {
-  item: PropTypes.object,
-//  button: PropTypes.bool.isRequired,
-//  buttonText: PropTypes.any.isRequired,
-//  iconType: PropTypes.string,
-//  title: PropTypes.string.isRequired,
-//  content: PropTypes.any.isRequired,
   onCreate: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func.isRequired, 
+  modal2Edit: PropTypes.bool.isRequired, 
+  item2Edit: PropTypes.object,
   loading2Modal: PropTypes.bool.isRequired,
 }
 

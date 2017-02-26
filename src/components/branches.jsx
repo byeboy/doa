@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Badge, Row, Col, Icon, Tooltip } from 'antd'
 import styles from './common.less'
 
-const getItem = function(branchArray, type, link, loading) {
+const getItem = function(branchArray, type, link, onDelete, onEdit) {
   link = link+'/';
   return branchArray.map(item => {
     if(type === 'branches') {
@@ -11,9 +11,18 @@ const getItem = function(branchArray, type, link, loading) {
           <Tooltip title={item.intro || '该部门暂无简介'}>
             <Card 
               title={item.name}
-              loading={loading}
+              extra={
+                <span>
+                  <Tooltip title="点击编辑">
+                    <Icon type="edit" className="actionIcon primary" onClick={(e)=>onEdit(item)} />
+                  </Tooltip>
+                  <Tooltip title="点击删除">
+                    <Icon type="close" className="actionIcon danger" onClick={(e)=>onDelete(item.id)} />
+                  </Tooltip>
+                </span>
+              }
             >
-              <p>总人数:{item.users_count}</p>
+              <h3>总人数:{item.users_count}</h3>
               <p className="txtr"><Icon type="clock-circle-o" /><i>{item.created_at}</i></p>
             </Card>
           </Tooltip>
@@ -23,11 +32,10 @@ const getItem = function(branchArray, type, link, loading) {
   })
 };
 
-function Brancher({ content, type, link, loading }) {
+function Brancher({ content, type, link, onDelete, onEdit }) {
   type = type || 'branches';
   link = link || '/'+type;
-  content = content || branches;
-  const demo = getItem(content, type, link, loading);
+  const demo = getItem(content, type, link, onDelete, onEdit);
   return (
     <Row gutter={16}>
       {demo}

@@ -5,6 +5,7 @@ import Bread from '../components/layout/bread';
 import Footer from '../components/layout/footer';
 import Sider from '../components/layout/sider';
 import IndexPage from './IndexPage';
+import Signer from './Sign';
 import styles from '../components/layout/main.less';
 import { Spin } from 'antd';
 import { classnames } from '../utils';
@@ -42,7 +43,7 @@ function App ({children, location, dispatch, app}) {
   }
 
   return (
-    <div>{!login
+    <div>{login
       ? <div className={classnames(styles.layout, {[styles.fold]: isNavbar ? false : siderFold}, {[styles.withnavbar]: isNavbar})}>
         {!isNavbar ? <aside className={classnames(styles.sider, {[styles.light]: !darkTheme})}>
             <Sider {...siderProps} />
@@ -58,7 +59,8 @@ function App ({children, location, dispatch, app}) {
           <Footer />
         </div>
       </div>
-      : <div className={styles.spin}><Spin tip='加载用户信息...' spinning={loading} size='large'><IndexPage/></Spin></div>}
+      : /*<div className={styles.spin}><Spin tip='加载用户信息...' spinning={loading} size='large'><IndexPage/></Spin></div>*/
+      <Signer />}
     </div>
   )
 }

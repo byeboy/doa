@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import * as serve from '../services/users';
+import { delay } from '../services/util';
 
 export default {
   namespace: 'user',
@@ -16,6 +17,7 @@ export default {
   },
   effects: {
     *query({ payload }, {call, put}) {
+      yield call(delay);
       const { data } = yield call(serve.query);
       const { success, post, message } = data;
       if(success){

@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import * as serve from '../services/tasks';
+import { delay } from '../services/util';
 
 export default {
   namespace: 'task',
@@ -49,29 +50,8 @@ export default {
     },
   },
   effects: {
-    *save({ payload }, {call, put}){
-      yield put({
-        type: 'showLoading',
-      });
-      const { values } = payload;
-      const { data } = yield call(serve.save, values);
-      const { success, post, message } = data;
-      if(success){
-        message.success(message);
-        yield put({
-          type: 'query',
-        });
-      } else {
-        message.warning(message);
-      }
-      yield put({
-          type: 'hideLoading',
-        });
-      yield put({
-        type: 'hideModal2Edit',
-      });
-    },
     *query({ payload }, {call, put}){
+      yield call(delay);
       const { data } = yield call(serve.query);
       const { success, post, message } = data;
       console.log(post)   //证明任务信息分类在前端进行，减轻服务端负载
@@ -109,6 +89,28 @@ export default {
         message.warning(message);
       }
     },
+    *save({ payload }, {call, put}){
+      yield put({
+        type: 'showLoading',
+      });
+      const { values } = payload;
+      const { data } = yield call(serve.save, values);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'query',
+        });
+      } else {
+        message.warning(message);
+      }
+      yield put({
+          type: 'hideLoading',
+        });
+      yield put({
+        type: 'hideModal2Edit',
+      });
+    },
     *del({ payload },{call, put}){
       const { id } = payload;
       const { data } = yield call(serve.del, id);
@@ -125,7 +127,6 @@ export default {
     *patch({ payload }, {call, put}){
       const { id, values } = payload;
       const { data } = yield call(serve.patch, payload);
-      console.log(data)
       const { success, post, message } = data;
       if(success){
         message.success(message);
@@ -145,7 +146,6 @@ export default {
       });
       const { id, values } = payload;
       const { data } = yield call(serve.update, payload);
-      console.log(data)
       const { success, post, message } = data;
       if(success){
         message.success(message);
