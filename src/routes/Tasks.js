@@ -40,8 +40,12 @@ const searchProps = {
 
 
 function Tasks({ dispatch, loading, task}) {
-  const { todos, dones, posts, modal2Edit, item2Edit, loading2Modal } = task;
+  const { loginUser, users, todos, dones, posts, modal2Edit, item2Edit, loading2Modal } = task;
+  const { authority } = loginUser;
+  
   const editProps = {
+    users,
+    loginUser,
     modal2Edit,
     item2Edit,
     loading2Modal,
@@ -56,7 +60,7 @@ function Tasks({ dispatch, loading, task}) {
         payload: {
           values: {
             ...values,
-            poster_id: 1,
+            poster_id: loginUser.id,
           },
         }
       })
@@ -148,12 +152,11 @@ function Tasks({ dispatch, loading, task}) {
 
   return (
       <div>
-        <TaskEditer {...editProps}/>
+        {authority >= 5 && <TaskEditer {...editProps}/>}
         <Row gutter={16}>
           <Col xs={24} sm={24} md={24} lg={24}>
             <Card title={<b><Icon type="info-circle-o" /> 任务模块说明</b>}
-              extra={<Button type="primary" onClick={showEdit}><Icon type="plus" />发布新任务</Button>}
-              loading={loading}
+              extra={authority >= 5 && <Button type="primary" onClick={showEdit}><Icon type="plus" />发布新任务</Button>}
             >
               <Row gutter={16}>
                 <Col xs={24} sm={24} md={16} lg={16}>
@@ -202,6 +205,7 @@ function Tasks({ dispatch, loading, task}) {
               </Collapse>
             </Card>
           </Col>
+          {authority >= 5 &&
           <Col xs={24} sm={24} md={8} lg={8}>
             <Card title={<b><Icon type="bars"/>我发布的</b>}
               loading={loading}
@@ -211,7 +215,7 @@ function Tasks({ dispatch, loading, task}) {
                 <div><Icon type="smile-o" />暂无需管理的任务</div>
               }
             </Card>
-          </Col>
+          </Col>}
         </Row>
       </div>
   );

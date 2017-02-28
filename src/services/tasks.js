@@ -1,7 +1,17 @@
 import request from '../utils/request';
 
-export async function query() {
-  return request('/api/tasks/user');
+const loginUser = JSON.parse(sessionStorage.getItem('loginUser'));
+const user = {
+  id:1,
+  name:'test',
+  branch: {
+    id:3,
+    authority:9,
+  }
+}
+
+export async function query(id) {
+  return request(`/api/tasks/user/${id}`);
 }
 
 export async function save(values) {

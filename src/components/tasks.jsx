@@ -110,7 +110,7 @@ function Tasker({content, type, link, onDone, onRedo, onCheck, onDelete, onEdit}
   const demo = getItem(content, type, link, onDone, onRedo, onCheck, onDelete, onEdit);
   return (
       <Timeline>
-        {demo || '暂无相关任务'}
+        {demo}
       </Timeline>
   );
 }

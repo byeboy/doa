@@ -6,17 +6,29 @@ class TaskEditer extends Component{
   constructor(props){
     super(props);
   }
-  initDoer = (users) => {
-    let userIdArray = [];
+  initUser = (users, id) => {
+    let userArray = [];
     if(users !== null) {
       users.map(item => {
-        userIdArray.push(item.id.toString());
+        if(item.id !== id) {
+          userArray.push(<Select.Option key={item.id} value={item.id.toString()}>{item.name}</Select.Option>);
+        }
       })
     }
-    return userIdArray;
+    return userArray;
   }
+  initDoer = (doers) => {
+    let doerIdArray = [];
+    if(doers !== null) {
+      doers.map(item => {
+        doerIdArray.push(item.id.toString());
+      })
+    }
+    return doerIdArray;
+  }
+  
   render() {
-    const { onCreate, onUpdate, handleCancel, modal2Edit, item2Edit, loading2Modal } = this.props;
+    const { users, loginUser, onCreate, onUpdate, handleCancel, modal2Edit, item2Edit, loading2Modal } = this.props;
     const handleOk = (e) => {
       e.preventDefault();
       this.props.form.validateFields((err, fieldsValue) => {
@@ -118,7 +130,7 @@ class TaskEditer extends Component{
                   style={{ width: '100%' }}
                   placeholder="请指定人员来执行该任务"
                 >
-                  {selectOpts}
+                  {this.initUser(users, loginUser.id)}
                 </Select>
               )}
             </Form.Item>
@@ -180,7 +192,7 @@ class TaskEditer extends Component{
                   style={{ width: '100%' }}
                   placeholder="请指定人员来执行该任务"
                 >
-                  {selectOpts}
+                  {this.initUser(users, loginUser.id)}
                 </Select>
               )}
             </Form.Item>
@@ -192,6 +204,7 @@ class TaskEditer extends Component{
 }
 
 TaskEditer.propTypes = {
+  users: PropTypes.array.isRequired,
   onCreate: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired, 

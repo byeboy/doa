@@ -5,9 +5,10 @@ import { delay } from '../services/util';
 export default {
   namespace: 'notice',
   state: {
+    loginUser: {},
     notices: [],
     modal2Edit: false,
-    item2Edit: {},
+    item2Edit: null,
     loading2Modal: false,
   },
   reducers: {
@@ -44,8 +45,9 @@ export default {
     },
   },
   effects: {
-    *query({ payload }, { call, put }){
+    *query({ payload }, { call, put, select }){
       yield call(delay);
+      const user = yield select(state=>state.app.user);
       const { data } = yield call(serve.query);
       const { success, post, message } = data;
       if(success){
@@ -53,6 +55,7 @@ export default {
         yield put({
           type: 'querySuccess',
           payload: {
+            loginUser: user,
             notices: post.notices,
           }
         });

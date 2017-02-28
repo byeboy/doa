@@ -42,7 +42,9 @@ function Users({ dispatch, loading, user }) {
       extra={<Searcher {...searchProps}/>}
       loading={loading}
     >
-      <User {...usersProps}/>
+      {users.length !== 0 ?
+      <User {...usersProps}/> :
+      <div><Icon type="smile-o" />暂无职员</div>}
     </Card>
   );
 }

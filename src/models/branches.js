@@ -5,10 +5,12 @@ import { delay } from '../services/util';
 export default {
   namespace: 'branch',
   state: {
+    loginUser: {},
     branches: [],
     modal2Edit: false,
-    item2Edit: {},
+    item2Edit: null,
     loading2Modal: false,
+    loginUser: {},
   },
   reducers: {
     querySuccess(state, action){
@@ -44,8 +46,19 @@ export default {
     },
   },
   effects: {
-    *query({ payload }, { call, put }){
+    *init({ payload }, { call, put }){
+      const { data } = yield call(serve.query);
+      const { success, post, message } = data;
+      yield put({
+        type: 'querySuccess',
+        payload: {
+          branches: post.branches,
+        }
+      });
+    },
+    *query({ payload }, { call, put, select }){
       yield call(delay);
+      const user = yield select(state=>state.app.user);
       const { data } = yield call(serve.query);
       const { success, post, message } = data;
       if(success){
@@ -54,6 +67,7 @@ export default {
           type: 'querySuccess',
           payload: {
             branches: post.branches,
+            loginUser: user
           }
         });
       } else {

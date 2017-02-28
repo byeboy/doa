@@ -29,7 +29,8 @@ const searchProps = {
 }
 
 function Notices({ dispatch, loading, notice }) {
-  const { notices, modal2Edit, item2Edit, loading2Modal } = notice;
+  const { loginUser, notices, modal2Edit, item2Edit, loading2Modal } = notice;
+  const { id, authority } = loginUser;
   
   const editProps = {
     modal2Edit,
@@ -46,7 +47,7 @@ function Notices({ dispatch, loading, notice }) {
         payload: {
           values: {
             ...values,
-            publisher_id: 1,
+            publisher_id: loginUser.id,
           }
         },
       })
@@ -62,10 +63,10 @@ function Notices({ dispatch, loading, notice }) {
     },
   }
   const noticesProps = {
+    loginUser_id: id,
     content: notices,
     type: 'notices',
     link: '/notices',
-    loading,
   }
   const actionProps = {
     onEdit(item) {
@@ -100,11 +101,16 @@ function Notices({ dispatch, loading, notice }) {
       extra={<Searcher {...searchProps}/>}
       loading={loading}
     >
-      <NoticeEditer {...editProps}/>
-      <div className={styles.actionBtns}>
-        <Button type="primary" onClick={onEdit}><Icon type="plus"/>发布公告</Button>
-      </div>
-      <Noticer {...noticesProps} {...actionProps}/>
+      {authority === 9 &&
+      <div>
+        <NoticeEditer {...editProps}/>
+        <div className={styles.actionBtns}>
+          <Button type="primary" onClick={onEdit}><Icon type="plus"/>发布公告</Button>
+        </div>
+      </div>}
+      {notices.length !== 0 ?
+        <Noticer {...noticesProps} {...actionProps}/> : 
+        <div><Icon type="smile-o" />暂无公告</div>}
     </Card>
   );
 }

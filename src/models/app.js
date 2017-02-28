@@ -1,15 +1,15 @@
-//import * as appS from '../services/app';
+import * as serve from '../services/users';
+import { message } from 'antd';
+import { delay } from '../services/util';
 
 export default {
   namespace: 'app',
   state: {
-    login: false,
-    sign: false,
-    member: false,
-    loading: false,
+    login: sessionStorage.getItem('authorization') !== null,
+    isMember: true,
     user: {
-      name: '耿耿',
-      authority: 9,
+      name: 'genggeng',
+      authority: 4,
     },
     buttonLoading: false,
     menuPopoverVisible: false,
@@ -23,33 +23,54 @@ export default {
   },
   subscriptions: {
     setup ({dispatch}) {
-      // dispatch({type: 'queryUser'})
+      dispatch({type: 'auth'});
       window.onresize = function () {
         dispatch({type: 'changeNavbar'})
       }
     }
   },
   effects: {
-    *getLogin({ payload }, { put }) {
+    *changeMember ({
+      payload
+    }, {put}) {
       yield put({
-        type: 'handelGetLogin',
+        type: 'handleChangeMember'
       })
     },
-    *getReg({ payload }, { put }) {
-      yield put({
-        type: 'handelGetReg',
-      })
+    *auth ({ payload }, {call ,put}) {
+      const { data, response } = yield call(serve.auth);
+      const { success, post, message } = data;
+      const { status, headers } = response;
+      if(success) {
+//        message.success(message);
+        yield put({
+          type: 'authSuccess',
+          payload: {
+            user: {
+              id: post.loginUser.id,
+              name: post.loginUser.name,
+              authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
+            },
+          }
+        })
+      } else {
+         message.warning(message);
+      }
     },
     *login ({
       payload
     }, {call, put}) {
       yield put({type: 'showButtonLoading'});
-      const { data } = yield call(appS.login, payload);
-      console.log(data)
+      const { values } = payload;
+      console.log(values)
+      const { data, response } = yield call(serve.login, values);
       const { success, post, message } = data;
+      const { status, headers } = response;
       if (success) {
+        message.success(message);
+        sessionStorage.setItem('authorization',headers.get('authorization'))
         yield put({
-          type: 'loginSuccess',
+          type: 'authSuccess',
           payload: {
             user: {
               ...post.loginUser,
@@ -59,11 +80,9 @@ export default {
           }
         })
       } else {
+        message.warning(message);
         yield put({
           type: 'loginFail',
-          payload: {
-            message: message,
-          }
         })
       }
     },
@@ -71,51 +90,32 @@ export default {
       payload
     }, {call, put}) {
       yield put({type: 'showButtonLoading'});
-      const { data } = yield call(appS.reg, payload);
-      console.log(data)
+      const { values } = payload;
+      const { data } = yield call(serve.reg, values);
       const { success, post, message } = data;
       if (success) {
+        message.success(message);
         yield put({
           type: 'regSuccess',
-          payload: {
-            message: message,
-          }
         })
       } else {
+        message.warning(message);
         yield put({
           type: 'regFail',
-          payload: {
-            message: message,
-          }
         })
       }
-    },
-    *queryUser ({
-      payload
-    }, {call, put}) {
-      yield put({type: 'showLoading'});
-      const { data } = yield call(userInfo, payload);
-      if (data.success) {
-        yield put({
-          type: 'loginSuccess',
-          payload: {
-            user: {
-              name: data.username
-            }
-          }
-        })
-      }
-
-      yield put({type: 'hideLoading'})
     },
     *logout ({
       payload
     }, {call, put}) {
-      const { data } = yield call(logout, payload);
-      if (data.success) {
+      sessionStorage.removeItem('authorization');
+      if (sessionStorage.getItem('authorization') === null) {
+        message.success('注销成功，即将返回登录页面');
         yield put({
           type: 'logoutSuccess'
         })
+      } else {
+        message.warning('注销失败');
       }
     },
     *switchSider ({
@@ -150,29 +150,21 @@ export default {
     }
   },
   reducers: {
-    handelGetLogin (state) {
+    handleChangeMember(state) {
       return {
         ...state,
-        sign: true,
-        member: true,
-      }
-    },
-    handelGetReg (state) {
-      return {
-        ...state,
-        sign: true,
-        member: false,
+        isMember: !state.isMember,
       }
     },
     regSuccess (state, action) {
       return {
         ...state,
         ...action.payload,
-        member: true,
-        buttonLoading: false
+        buttonLoading: false,
+        isMember: true,
       }
     },
-    loginSuccess (state, action) {
+    authSuccess (state, action) {
       return {
         ...state,
         ...action.payload,
@@ -181,22 +173,21 @@ export default {
       }
     },
     logoutSuccess (state) {
+      window.location.href = '/';
       return {
         ...state,
         login: false
       }
     },
-    regFail (state, action) {
+    regFail (state) {
       return {
         ...state,
-        ...action.payload,
         buttonLoading: false
       }
     },
-    loginFail (state, action) {
+    loginFail (state) {
       return {
         ...state,
-        ...action.payload,
         login: false,
         buttonLoading: false
       }
@@ -211,18 +202,6 @@ export default {
       return {
         ...state,
         buttonLoading: false
-      }
-    },
-    showLoading (state) {
-      return {
-        ...state,
-        loading: true
-      }
-    },
-    hideLoading (state) {
-      return {
-        ...state,
-        loading: false
       }
     },
     handleSwitchSider (state) {

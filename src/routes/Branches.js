@@ -27,7 +27,8 @@ const searchProps = {
 
 
 function Branches({ dispatch, loading, branch}) {
-  const { branches, modal2Edit, item2Edit, loading2Modal } = branch;
+  const { loginUser, branches, modal2Edit, item2Edit, loading2Modal } = branch;
+  const { authority } = loginUser;
   
   const editProps = {
     modal2Edit,
@@ -60,6 +61,7 @@ function Branches({ dispatch, loading, branch}) {
     },
   }
   const branchesProps = {
+    authority: authority,
     content: branches,
     type: 'branches',
     link: '/branches',
@@ -95,11 +97,16 @@ function Branches({ dispatch, loading, branch}) {
       extra={<Searcher {...searchProps}/>}
       loading={loading}
     >
-      <BranchEditer {...editProps}/>
-      <div className={styles.actionBtns}>
-        <Button type="primary" onClick={onEdit}><Icon type="plus"/>新建部门</Button>
-      </div>
-      <Brancher {...branchesProps}{...actionProps}/>
+      {authority === 9 &&
+      <div>
+        <BranchEditer {...editProps}/>
+        <div className={styles.actionBtns}>
+          <Button type="primary" onClick={onEdit}><Icon type="plus"/>新建部门</Button>
+        </div>
+      </div>}
+      {branches.length !== 0 ?
+      <Brancher {...branchesProps}{...actionProps}/> :
+      <div><Icon type="smile-o" />暂无部门</div>}
     </Card>
   );
 }

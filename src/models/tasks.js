@@ -5,10 +5,12 @@ import { delay } from '../services/util';
 export default {
   namespace: 'task',
   state: {
+    loginUser: {},
     tasks: [],
     todos: [],
     dones: [],
     posts: [],
+    users: [],
     modal2View: false,
     modal2Edit: false,
     item2Edit: {
@@ -50,16 +52,18 @@ export default {
     },
   },
   effects: {
-    *query({ payload }, {call, put}){
+    *query({ payload }, {call, put, select}){
       yield call(delay);
-      const { data } = yield call(serve.query);
+      const user = yield select(state=>state.app.user);
+      const users = yield select(state=>state.user.users);
+      const { data, response } = yield call(serve.query, user.id);
       const { success, post, message } = data;
       console.log(post)   //证明任务信息分类在前端进行，减轻服务端负载
       if(success){
         message.success(message);
+        const todos = [];
+        const dones = [];
         if(post.tasks.length != 0){
-          const todos = [];
-          const dones = [];
           post.tasks.map(item => {
             if(item.status <= 1) {
               todos.push(item);
@@ -70,18 +74,22 @@ export default {
           yield put({
             type: 'querySuccess',
             payload: {
+              loginUser: user,
               todos: todos,
               dones: dones,
               posts: post.posts,
+              users: users,
             },
           })
         } else {
           yield put({
             type: 'querySuccess',
             payload: {
-              todos: post.todos,
-              dones: post.dones,
+              loginUser: user,
+              todos: todos,
+              dones: dones,
               posts: post.posts,
+              users: users,
             },
           })
         }
@@ -167,6 +175,8 @@ export default {
     setup({dispatch, history}) {
       return history.listen(({ pathname }) => {
         if(pathname === '/tasks') {
+          message.info('职员信息初始化中...');
+          dispatch({type: 'user/init'});
           dispatch({ type: 'query' });
         }
       });

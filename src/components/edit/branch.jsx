@@ -19,6 +19,10 @@ const authority = [
     key: 4,
     name: '业务整合层',
     authority: 1,
+  },{
+    key: 5,
+    name: '待分配职员专用',
+    authority: 0,
   },
 ];
 
