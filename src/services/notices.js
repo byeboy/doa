@@ -4,6 +4,14 @@ export async function query() {
   return request('/api/notices');
 }
 
+export async function search(payload) {
+  const { param, val } = payload;
+  if(val === ''){
+    return request('/api/notices');
+  }
+  return request(`/api/notices/${param}/${val}`);
+}
+
 export async function save(values) {
   return request('/api/notices', {
     method: 'POST',

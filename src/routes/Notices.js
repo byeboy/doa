@@ -6,32 +6,30 @@ import Searcher from '../components/search';
 import NoticeEditer from '../components/edit/notice';
 import styles from './common.less';
 
-const searchProps = {
-  selectOpts: [
-    {
-      name: '标题',
-      value: 'title',
-    },{
-      name: '发布时间',
-      value: 'created_at',
-    }
-  ],
-  defaultSelected: 'title',
-  onSearch(param, val) {
-    dispatch({
-      type: '',
-      payload: {
-        param: param,
-        val: val,
-      }
-    })
-  }
-}
-
 function Notices({ dispatch, loading, notice }) {
   const { loginUser, notices, modal2Edit, item2Edit, loading2Modal } = notice;
   const { id, authority } = loginUser;
-  
+  const searchProps = {
+    selectOpts: [
+      {
+        name: '标题',
+        value: 'title',
+      },{
+        name: '发布时间',
+        value: 'created_at',
+      }
+    ],
+    defaultSelected: 'title',
+    onSearch(param, val) {
+      dispatch({
+        type: 'notice/search',
+        payload: {
+          param: param,
+          val: val,
+        }
+      })
+    }
+  }
   const editProps = {
     modal2Edit,
     item2Edit,

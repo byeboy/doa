@@ -33,6 +33,15 @@ class Signup extends Component{
       });
     }
     
+    const checkPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('两次密码输入不一致');
+    } else {
+      callback();
+    }
+  }
+    
     return ( 
       <div className={styles.signForm}>
         <h1>欢迎加入风林麦谷协同办公系统</h1>
@@ -86,7 +95,11 @@ class Signup extends Component{
             help={confirmError || ''}
           >
             {getFieldDecorator('confirm', {
-              rules: [{ required: true, message: '请确认密码' }],
+              rules: [{ 
+                required: true, message: '请确认密码'
+              }, {
+                validator: checkPassword,
+              }],
             })(
               <Input addonBefore="确认密码" type="password" placeholder="请再次输入密码" />
             )}

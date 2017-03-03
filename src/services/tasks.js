@@ -14,6 +14,14 @@ export async function query(id) {
   return request(`/api/tasks/user/${id}`);
 }
 
+export async function search(payload) {
+  const { param, val } = payload;
+  if(val === ''){
+    return request(`/api/tasks/user/${id}`);
+  }
+  return request(`/api/tasks/${param}/{val}`);
+}
+
 export async function save(values) {
   return request(`/api/tasks`, {
     method: 'POST',

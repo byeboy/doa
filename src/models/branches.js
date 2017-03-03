@@ -10,7 +10,6 @@ export default {
     modal2Edit: false,
     item2Edit: null,
     loading2Modal: false,
-    loginUser: {},
   },
   reducers: {
     querySuccess(state, action){
@@ -72,6 +71,27 @@ export default {
         });
       } else {
         message.success(message);
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            branches: post.branches,
+          }
+        });
+      }
+    },
+    *search({ payload }, { call, put }){
+      const { data } = yield call(serve.search, payload);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            branches: post.branches,
+          }
+        });
+      } else {
+        message.warning(message);
         yield put({
           type: 'querySuccess',
           payload: {

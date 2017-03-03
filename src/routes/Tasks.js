@@ -186,7 +186,7 @@ function Tasks({ dispatch, loading, task}) {
         <Row gutter={16}>
           <Col xs={24} sm={24} md={16} lg={16}>
             <Card title={<b><Icon type="solution"/>我的安排</b>}
-              extra={<Searcher {...searchProps}/>}
+              /*extra={<Searcher {...searchProps}/>}*/
               loading={loading}
               >
               <Collapse defaultActiveKey={['1']} loading={loading}>

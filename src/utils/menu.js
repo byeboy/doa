@@ -20,7 +20,7 @@ module.exports = [
   {
     key: 'branches',
     name: '部门详情',
-    icon: 'appstore-o',
+    icon: 'share-alt',
     permission: 1,
   },
   {
@@ -30,6 +30,12 @@ module.exports = [
     permission: 1,
   },
   {
+    key: 'warehouse',
+    name: '仓储信息',
+    icon: 'appstore-o',
+    permission: 1,
+  },
+  /*{
     key: 'navigation',
     name: '测试导航',
     icon: 'setting',
@@ -53,5 +59,5 @@ module.exports = [
         ]
       }
     ]
-  }
+  }*/
 ]

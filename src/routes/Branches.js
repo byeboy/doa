@@ -6,30 +6,27 @@ import Searcher from '../components/search';
 import BranchEditer from '../components/edit/branch';
 import styles from './common.less';
 
-const searchProps = {
-  selectOpts: [
-    {
-      name: '部门名称',
-      value: 'name',
-    }
-  ],
-  defaultSelected: 'name',
-  onSearch(param, val) {
-    dispatch({
-      type: '',
-      payload: {
-        param: param,
-        val: val,
-      },
-    })
-  }
-}
-
-
 function Branches({ dispatch, loading, branch}) {
   const { loginUser, branches, modal2Edit, item2Edit, loading2Modal } = branch;
   const { authority } = loginUser;
-  
+  const searchProps = {
+    selectOpts: [
+      {
+        name: '部门名称',
+        value: 'name',
+      }
+    ],
+    defaultSelected: 'name',
+    onSearch(param, val) {
+      dispatch({
+        type: 'branch/search',
+        payload: {
+          param: param,
+          val: val,
+        },
+      })
+    }
+  }
   const editProps = {
     modal2Edit,
     item2Edit,
@@ -93,7 +90,7 @@ function Branches({ dispatch, loading, branch}) {
     })
   }
   return (
-    <Card title={<b><Icon type="appstore-o"/> 部门详情</b>}
+    <Card title={<b><Icon type="share-alt"/> 部门详情</b>}
       extra={<Searcher {...searchProps}/>}
       loading={loading}
     >

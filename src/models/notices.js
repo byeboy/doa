@@ -69,6 +69,27 @@ export default {
         });
       }
     },
+    *search({ payload }, { call, put }){
+      const { data } = yield call(serve.search, payload);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            notices: post.notices,
+          }
+        });
+      } else {
+        message.warning(message);
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            notices: post.notices,
+          }
+        });
+      }
+    },
     *save({ payload }, {put, call}){
       yield put({
         type: 'showLoading',
