@@ -89,13 +89,12 @@ function Users({ dispatch, loading, user }) {
     })
   }
   const usersProps = {
-    loginUser,
-    branches,
     content: users,
     type: 'users',
     link: '/users',
     loading,
-    
+    loginUser,
+    branches,
   };
   return (
     <Card title={<b><Icon type="team"/> 职员一览</b>}

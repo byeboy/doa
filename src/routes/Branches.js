@@ -58,7 +58,7 @@ function Branches({ dispatch, loading, branch}) {
     },
   }
   const branchesProps = {
-    authority: authority,
+    loginUser,
     content: branches,
     type: 'branches',
     link: '/branches',

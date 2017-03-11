@@ -30,7 +30,7 @@ module.exports = [
     permission: 1,
   },
   {
-    key: 'warehouse',
+    key: 'parts',
     name: '仓储信息',
     icon: 'appstore-o',
     permission: 1,

@@ -5,6 +5,11 @@
       "target": "http://oa.app/api/",
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
+    },
+    "/": {
+      "target": "http://oa.app/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/" : "" }
     }
   },
   "env": {

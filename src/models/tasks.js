@@ -14,8 +14,10 @@ export default {
     modal2View: false,
     modal2Edit: false,
     item2Edit: {
+      id: null,
       users: [],    //初始化任务执行者，避免报undefined错误
     },
+    current: 0,
     loading2Modal: false,
   },
   reducers: {
@@ -36,6 +38,28 @@ export default {
       return {
         ...state,
         modal2Edit: false,
+        current: 0,
+      }
+    },
+    next(state){
+      return {
+        ...state,
+        current: state.current + 1,
+      }
+    },
+    prev(state){
+      return {
+        ...state,
+        current: state.current - 1,
+      }
+    },
+    handleStore(state, action){
+      return {
+        ...state,
+        item2Edit: {
+          ...state.item2Edit,
+          ...action.payload,
+        },
       }
     },
     showLoading(state){
@@ -97,6 +121,63 @@ export default {
         message.warning(message);
       }
     },
+    *store({ payload }, {call, put}){
+      const { values } = payload;
+      yield put({
+        type: 'handleStore',
+        payload: values,
+      });
+    },
+    *submit({ payload }, {call, put, select}){
+      const { values } = payload;
+      yield put({
+        type: 'handleStore',
+        payload: values,
+      });
+      const item2Edit = yield select(state => state.task.item2Edit);
+      console.log(item2Edit)
+      if(item2Edit.id === null){
+        yield put({
+          type: 'showLoading',
+        });
+        const { data, response } = yield call(serve.save, item2Edit);
+        const { success, post } = data;
+        if(success){
+          message.success(data.message);
+          yield put({
+            type: 'query',
+          });
+        } else {
+          message.warning(message);
+        }
+        yield put({
+            type: 'hideLoading',
+          });
+        yield put({
+          type: 'hideModal2Edit',
+        });
+      } else {
+        yield put({
+          type: 'showLoading',
+        });
+        const { data, response } = yield call(serve.update, item2Edit);
+        const { success, post } = data;
+        if(success){
+          message.success(data.message);
+          yield put({
+            type: 'query',
+          });
+        } else {
+          message.warning(message);
+        }
+        yield put({
+            type: 'hideLoading',
+          });
+        yield put({
+          type: 'hideModal2Edit',
+        });
+      }
+    },
     *save({ payload }, {call, put}){
       yield put({
         type: 'showLoading',
@@ -144,9 +225,19 @@ export default {
       } else {
         message.warning(message);
       }
-      yield put({
-        type: 'hideModal2Edit',
-      });
+    },
+    *stepPatch({ payload }, {call, put}){
+      const { id, values } = payload;
+      const { data } = yield call(serve.stepPatch, payload);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'query',
+        })
+      } else {
+        message.warning(message);
+      }
     },
     *update({ payload }, {call, put}){
       yield put({

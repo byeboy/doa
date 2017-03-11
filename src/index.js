@@ -15,6 +15,7 @@ app.model(require("./models/tasks"));
 app.model(require("./models/users"));
 app.model(require("./models/branches"));
 app.model(require("./models/notices"));
+app.model(require("./models/parts"));
 
 // 2. Plugins
 // app.use({});

@@ -40,10 +40,9 @@ const searchProps = {
 
 
 function Tasks({ dispatch, loading, task}) {
-  const { loginUser, users, todos, dones, posts, modal2Edit, item2Edit, loading2Modal } = task;
-  const { authority } = loginUser;
-  
+  const { loginUser, users, todos, dones, posts, modal2Edit, item2Edit, current, loading2Modal } = task;  
   const editProps = {
+    current,
     users,
     loginUser,
     modal2Edit,
@@ -52,6 +51,32 @@ function Tasks({ dispatch, loading, task}) {
     handleCancel(){
       dispatch({
         type: 'task/hideModal2Edit',
+      });
+    },
+    onStore(values){
+      dispatch({
+        type: 'task/store',
+        payload: {
+          values: {
+            ...values,
+          },
+        }
+      });
+    },
+    onNext(){
+      dispatch({
+        type: 'task/next',       
+      });          
+    },
+    onSubmit(values){
+      dispatch({
+        type: 'task/submit',
+        payload: {
+          values: {
+            ...values,
+            poster_id: loginUser.id,
+          },
+        }
       });
     },
     onCreate(values){
@@ -63,7 +88,7 @@ function Tasks({ dispatch, loading, task}) {
             poster_id: loginUser.id,
           },
         }
-      })
+      });
     },
     onUpdate(values){
       dispatch({
@@ -125,8 +150,42 @@ function Tasks({ dispatch, loading, task}) {
         }
       })
     },
+    onStepChose(id){
+      dispatch({
+        type: 'task/stepPatch',
+        payload: {
+          id: id,
+          values: {
+            'user_id': loginUser.id,
+          },
+        }
+      })
+    },
+    onStepDone(id){
+      dispatch({
+        type: 'task/stepPatch',
+        payload: {
+          id: id,
+          values: {
+            'status': 9,
+          },
+        }
+      })
+    },
+    onStepRedo(id){
+      dispatch({
+        type: 'task/stepPatch',
+        payload: {
+          id: id,
+          values: {
+            'status': 1,
+          },
+        }
+      })
+    },
   }
   const todoProps = {
+    loginUser,
     content: todos,
     type: 'todos',
   }
@@ -145,19 +204,22 @@ function Tasks({ dispatch, loading, task}) {
     dispatch({
       type: 'task/showModal2Edit',
       payload: {
-        item2Edit: null,
-      }
+          item2Edit: {
+                id: null,
+                users: [],
+            },
+        }
     })
   }
+  
+  const { authority } = loginUser;
 
   return (
       <div>
         {authority >= 5 && <TaskEditer {...editProps}/>}
         <Row gutter={16}>
           <Col xs={24} sm={24} md={24} lg={24}>
-            <Card title={<b><Icon type="info-circle-o" /> 任务模块说明</b>}
-              extra={authority >= 5 && <Button type="primary" onClick={showEdit}><Icon type="plus" />发布新任务</Button>}
-            >
+            <Card title={<b><Icon type="info-circle-o" /> 任务模块说明</b>}>
               <Row gutter={16}>
                 <Col xs={24} sm={24} md={16} lg={16}>
                   <h3>该页面为任务管理页</h3>
@@ -183,39 +245,32 @@ function Tasks({ dispatch, loading, task}) {
             </Card>
           </Col>
         </Row>
+        {authority >= 5 &&
         <Row gutter={16}>
-          <Col xs={24} sm={24} md={16} lg={16}>
-            <Card title={<b><Icon type="solution"/>我的安排</b>}
-              /*extra={<Searcher {...searchProps}/>}*/
+          <Col xs={24} sm={24} md={24} lg={24}>
+            <Card title={<b><Icon type="bars"/>任务管理</b>}
               loading={loading}
-              >
-              <Collapse defaultActiveKey={['1']} loading={loading}>
-                <Collapse.Panel header="待办事项" key="1">
-                  {todos.length !== 0 ?
-                    <Tasker {...todoProps} {...actionProps}/> : 
-                    <div><Icon type="smile-o" />暂无待办事项</div>
-                  }
-                </Collapse.Panel>
-                <Collapse.Panel header="已完成待验收" key="2">
-                  {dones.length !== 0 ?
-                    <Tasker {...doneProps} {...actionProps}/> : 
-                    <div><Icon type="smile-o" />暂无待验收的任务</div>
-                  }
-                </Collapse.Panel>
-              </Collapse>
-            </Card>
-          </Col>
-          {authority >= 5 &&
-          <Col xs={24} sm={24} md={8} lg={8}>
-            <Card title={<b><Icon type="bars"/>我发布的</b>}
-              loading={loading}
+              extra={authority >= 5 && <Button type="primary" disabled={users.length <= 1} onClick={showEdit}><Icon type="plus" />发布新任务</Button>}
             >
               {posts.length !== 0 ?
                 <Tasker {...postProps} {...actionProps}/> : 
                 <div><Icon type="smile-o" />暂无需管理的任务</div>
               }
             </Card>
-          </Col>}
+          </Col>
+        </Row>}
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={24} lg={24}>
+            <Card title={<b><Icon type="solution"/>我的待办</b>}
+              /*extra={<Searcher {...searchProps}/>}*/
+              loading={loading}
+              >
+              {todos.length !== 0 ?
+                <Tasker {...todoProps} {...actionProps}/>: 
+                <div><Icon type="smile-o" />暂无待办事项</div>
+              }
+            </Card>
+          </Col>
         </Row>
       </div>
   );

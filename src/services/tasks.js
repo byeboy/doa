@@ -1,15 +1,5 @@
 import request from '../utils/request';
 
-const loginUser = JSON.parse(sessionStorage.getItem('loginUser'));
-const user = {
-  id:1,
-  name:'test',
-  branch: {
-    id:3,
-    authority:9,
-  }
-}
-
 export async function query(id) {
   return request(`/api/tasks/user/${id}`);
 }
@@ -37,9 +27,16 @@ export async function patch(payload) {
   });
 }
 
-export async function update(payload) {
+export async function stepPatch(payload) {
   const {values, id} = payload;
-  return request(`/api/tasks/${id}`, {
+  return request(`/api/steps/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(values),
+  });
+}
+
+export async function update(values) {
+  return request(`/api/tasks/${values.id}`, {
     method: 'PUT',
     body: JSON.stringify(values),
   });

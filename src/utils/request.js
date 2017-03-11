@@ -8,6 +8,7 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   } else if (response.status === 401) {
+    sessionStorage.removeItem('authorization');
     window.location.href = '/';
   }
 

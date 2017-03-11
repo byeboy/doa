@@ -100,7 +100,7 @@ class UserEditer extends Component{
               >
               {getFieldDecorator('branch_id', {
                 rules: [{ required: true, message: '所属部门不可为空' }],
-                initialValue: item2Edit.branch_id.toString(),
+                initialValue: item2Edit.branch_id !== null ? item2Edit.branch_id.toString() : '',
               })(
                 <Select
                   showSearch

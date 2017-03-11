@@ -19,7 +19,11 @@ const getItem = function(userArray, type, link, loading, loginUser, branches, on
                 </Tooltip>
                 <p><b>联系方式:{item.phone}</b></p>
                 <p>
-                  <Icon type="appstore-o" />所属部门：{item.branch.name}
+                  <Icon type="appstore-o" />
+                  {item.branch !== null ? 
+                    `所属部门：${item.branch.name}` :
+                    '暂未分配'
+                  }
                   {loginUser.authority === 9 &&
                   <Tooltip title="点击编辑">
                     <Icon type="edit" className="actionIcon primary" onClick={(e)=>onEdit(item)} />
@@ -34,9 +38,10 @@ const getItem = function(userArray, type, link, loading, loginUser, branches, on
   })
 };
 
-function User({ loginUser, branches, content, type, link, loading, onEdit }) {
+function User({ content, type, link, loading, loginUser, branches, onEdit }) {
   type = type || 'users';
   link = link || '/'+type;
+  console.log(content)
   function handleChange(value) {
 //    const value = this.value;
     console.log(`selected ${value}`);

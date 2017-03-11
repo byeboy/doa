@@ -49,6 +49,7 @@ export default {
             user: {
               id: post.loginUser.id,
               name: post.loginUser.name,
+              branch_id: post.loginUser.branch_id,
               authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
             },
           }

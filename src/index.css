@@ -3,6 +3,14 @@ html, body, :global(#root) {
   height: 100%;
 }
 
+:global(.actionBtns) {
+  margin-bottom: 16px;
+}
+
+:global(.actionBtns>button) {
+  margin-right: 8px;
+}
+
 :global(.fr) {
   float: right;
   margin-right: 3%;

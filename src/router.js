@@ -12,7 +12,8 @@ import Branches from "./routes/Branches.js";
 
 import Users from "./routes/Users.js";
 
-import Warehouse from "./routes/Warehouse.js";
+import Parts from "./routes/Parts.js";
+
 
 function RouterConfig({ history }) {
   return (
@@ -24,7 +25,7 @@ function RouterConfig({ history }) {
         <Route path="tasks" component={Tasks} />
         <Route path="branches" component={Branches} />
         <Route path="users" component={Users} />
-      	<Route path="warehouse" component={Warehouse} />
+      	<Route path="parts" component={Parts} />
       </Route>
     </Router>
   );
