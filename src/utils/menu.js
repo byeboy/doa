@@ -12,6 +12,12 @@ module.exports = [
     permission: 1,
   },
   {
+    key: 'products',
+    name: '产品管理',
+    icon: 'global',
+    permission: 1,
+  },
+  {
     key: 'tasks',
     name: '任务清单',
     icon: 'solution',
@@ -30,7 +36,7 @@ module.exports = [
     permission: 1,
   },
   {
-    key: 'parts',
+    key: 'goods',
     name: '仓储信息',
     icon: 'appstore-o',
     permission: 1,

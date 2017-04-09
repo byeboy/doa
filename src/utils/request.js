@@ -17,6 +17,14 @@ function checkStatus(response) {
   throw error;
 }
 
+function parseErrorMessage({ data }) {
+  const { success, message } = data;
+  if (success === false) {
+    throw new Error(message);
+  }
+  return { data };
+}
+
 
 /** 
  * Requests a URL, returning a promise.
@@ -44,6 +52,8 @@ export default async function request(url, options) {
   checkStatus(response);
  
   const data = await response.json();
+
+  parseErrorMessage({data});
  
   const ret = {
     data,

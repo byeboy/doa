@@ -50,7 +50,7 @@ export default {
               id: post.loginUser.id,
               name: post.loginUser.name,
               branch_id: post.loginUser.branch_id,
-              authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
+              authority: post.loginUser.branch === null ? 9 : post.loginUser.branch.authority,
             },
           }
         })
@@ -75,7 +75,7 @@ export default {
           payload: {
             user: {
               ...post.loginUser,
-              authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
+              authority: post.loginUser.branch === null ? 9 : post.loginUser.branch.authority,
             },
             message: message,
           }

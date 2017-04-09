@@ -45,7 +45,7 @@ class Searcher extends Component{
         defaultValue={this.props.defaultSelected}
         optionFilterProp="children"
         onChange={this.handleSelected.bind(this)}
-        filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
       >
         {demo}
       </Select>

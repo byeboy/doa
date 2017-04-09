@@ -21,7 +21,7 @@ class Signup extends Component{
     const confirmError = isFieldTouched('confirm') && getFieldError('confirm');
     const nameError = isFieldTouched('name') && getFieldError('name');
     const phoneError = isFieldTouched('phone') && getFieldError('phone');
-    const codeError = isFieldTouched('code') && getFieldError('code');
+    // const codeError = isFieldTouched('code') && getFieldError('code');
     
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -104,16 +104,16 @@ class Signup extends Component{
               <Input addonBefore="确认密码" type="password" placeholder="请再次输入密码" />
             )}
           </Form.Item>
-          <Form.Item
-            validateStatus={codeError ? 'error' : ''}
-            help={confirmError || ''}
-          >
-            {getFieldDecorator('text', {
-              rules: [{ required: true, message: '请输入图中的验证码' }],
-            })(
-              <Input addonBefore="验证码" addonAfter={<img src="" alt="验证码占位" />} type="text" placeholder="请输入后面的验证码" />
-            )}
-          </Form.Item>
+          {/*<Form.Item
+                      validateStatus={codeError ? 'error' : ''}
+                      help={confirmError || ''}
+                    >
+                      {getFieldDecorator('text', {
+                        rules: [{ required: true, message: '请输入图中的验证码' }],
+                      })(
+                        <Input addonBefore="验证码" addonAfter={<img src="" alt="验证码占位" />} type="text" placeholder="请输入后面的验证码" />
+                      )}
+                    </Form.Item>*/}
           <Form.Item>
             <Button
               type="primary"

@@ -19,6 +19,23 @@ export default {
     },
     current: 0,
     loading2Modal: false,
+    proOpts: [{
+      value: 'models',
+      label: '车型',
+      isLeaf: false,
+    }, {
+      value: 'cabinets',
+      label: '柜体',
+      isLeaf: false,
+    },{
+      value: 'fans',
+      label: '风机',
+      isLeaf: false,
+    }, {
+      value: 'parts',
+      label: '零件',
+      isLeaf: false,
+    }],
   },
   reducers: {
     querySuccess(state, action){
@@ -74,6 +91,81 @@ export default {
         loading2Modal: false,
       }
     },
+    showOptLoading(state){
+      return {
+        ...state,
+        optLoading: true,
+      }
+    },
+    getOptsSuccess(state, action){
+      const { type, opts } = action.payload;
+      let newOpt = [];
+      newOpt = opts.map(o => {
+        return {
+          ...o,
+          label: o.name,
+          value: o.id,
+        }
+      })
+      const newProOpts = state.proOpts.map(p => {
+        if(p.value === type) {
+          return {
+            ...p,
+            children: newOpt,
+          }
+        } else {
+          return p;
+        }
+      })
+      return {
+        ...state,
+        proOpts: newProOpts,
+      }
+    },
+    initOpts(state){
+      const proOpts = [{
+        value: 'models',
+        label: '车型',
+        isLeaf: false,
+      }, {
+        value: 'cabinets',
+        label: '柜体',
+        isLeaf: false,
+      },{
+        value: 'fans',
+        label: '风机',
+        isLeaf: false,
+      }, {
+        value: 'parts',
+        label: '零件',
+        isLeaf: false,
+      }];
+      return {
+        ...state,
+        proOpts,
+      }
+    },
+    hideOptLoading(state){
+      return {
+        ...state,
+        optLoading: false,
+      }
+    },
+    progressPatchSuccess(state, action){
+      const { post } = action.payload;
+      const newDones = state.dones.filter(d => d.id !== post.id);
+      const newTodos = state.todos.filter(t => t.id !== post.id);
+      if(post.status <= 1) {
+        newTodos.push(post);
+      } else if(post.status < 9) {
+        newDones.push(post);
+      };
+      return {
+        ...state,
+        todos: newTodos,
+        dones: newDones,
+      }
+    }
   },
   effects: {
     *query({ payload }, {call, put, select}){
@@ -239,6 +331,22 @@ export default {
         message.warning(message);
       }
     },
+    *progressPatch({ payload }, {call, put}){
+      const { id, progress } = payload;
+      const { data } = yield call(serve.progressPatch, payload);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({
+          type: 'progressPatchSuccess',
+          payload: {
+            post,
+          }
+        })
+      } else {
+        message.warning(message);
+      }
+    },
     *update({ payload }, {call, put}){
       yield put({
         type: 'showLoading',
@@ -261,6 +369,31 @@ export default {
         type: 'hideModal2Edit',
       });
     },
+    *getOpts({ payload }, {call, put}){
+      yield put({type: 'showOptLoading'});
+      const { type } = payload;
+      const { data } = yield call(serve.getOpts, type);
+      const { success, post, message } = data;
+      if(success){
+        message.success(message);
+        yield put({type: 'hideOptLoading'});
+        yield put({
+          type: 'getOptsSuccess',
+          payload: {
+            type,
+            opts: post[type],
+          }
+        })
+      } else {
+        yield put({type: 'hideOptLoading'});
+        message.warning(message);
+      }
+    },
+    *downloadZip({ payload }, {call, put}){
+      const { id } = payload;
+      /*const { data } = */yield call(serve.downloadZip, id);
+      // console.log(data)
+    }
   },
   subscriptions: {
     setup({dispatch, history}) {

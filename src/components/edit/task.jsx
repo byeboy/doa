@@ -357,6 +357,9 @@ class Doer extends Component{
               multiple
               style={{ width: '100%' }}
               placeholder="请指定人员来执行该任务"
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) => option.props.children[0].toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
               {this.initUser(users, loginUser.id)}
             </Select>
