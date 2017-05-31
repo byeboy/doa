@@ -54,7 +54,11 @@ class NoticeEditer extends Component{
               label="标题"
               >
               {getFieldDecorator('title', {
-                rules: [{ required: true, message: '公告标题不可为空' }],
+                rules: [{ 
+                  required: true, message: '公告标题不可为空' 
+                }, {
+                  max: 30, message: '公告标题不可超过30位'
+                }],
                 initialValue: null,
               })(
                 <Input placeholder="请输入公告标题" />
@@ -65,6 +69,9 @@ class NoticeEditer extends Component{
               label="简述"
               >
               {getFieldDecorator('intro', {
+                rules: [{
+                  max: 255, message: '公告简述不可超过255位'
+                }],
                 initialValue: null,
               })(
                 <Input placeholder="建议输入公告简述" />  
@@ -78,7 +85,7 @@ class NoticeEditer extends Component{
                 rules: [{ required: true, message: '详细内容不可为空' }],
                 initialValue: null,
               })(
-                <Input placeholder="请输入公告的详细内容" />
+                <Input type="textarea" placeholder="请输入公告的详细内容" autosize={{ minRows: 2, maxRows: 6 }} />
               )}
             </Form.Item>
           </Form> :
@@ -88,7 +95,11 @@ class NoticeEditer extends Component{
               label="标题"
               >
               {getFieldDecorator('title', {
-                rules: [{ required: true, message: '公告标题不可为空' }],
+                rules: [{ 
+                  required: true, message: '公告标题不可为空' 
+                }, {
+                  max: 30, message: '公告标题不可超过30位'
+                }],
                 initialValue: item2Edit.title,
               })(
                 <Input placeholder="请输入公告标题" />
@@ -99,6 +110,9 @@ class NoticeEditer extends Component{
               label="简述"
               >
               {getFieldDecorator('intro', {
+                rules: [{
+                  max: 255, message: '公告简述不可超过255位'
+                }],
                 initialValue: item2Edit.intro,
               })(
                 <Input placeholder="建议输入公告简述" />  
@@ -112,7 +126,7 @@ class NoticeEditer extends Component{
                 rules: [{ required: true, message: '详细内容不可为空' }],
                 initialValue: item2Edit.content,
               })(
-                <Input placeholder="请输入公告的详细内容" />
+                <Input type="textarea" placeholder="请输入公告的详细内容" autosize={{ minRows: 2, maxRows: 6 }} />
               )}
             </Form.Item>
           </Form>

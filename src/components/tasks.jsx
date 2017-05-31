@@ -3,7 +3,9 @@ import { Collapse, Timeline, Icon, Badge, Button, Tooltip, Popover, Tag, Progres
 
 const getDoer = (userArray) => {
   if(userArray.length != 0){
-      return userArray.map(item => item.name);
+      return userArray.map(item => {
+        return item.name+'，';
+      });
   }
 };
 
@@ -169,55 +171,47 @@ class Todo extends Component{
     const {data, onProgressPatch, onDownloadZip, loginUser} = this.props;
     if(data.length !== 0){
       return data.map((item, index) => {
-        switch(type){
-          case 'todos': {
-            return (
-              <Collapse.Panel 
-                header={
-                  <Row>
-                    <Col span={12}>
-                      {item.name}
-                    </Col>
-                    <Col span={12}>
-                      <Progress percent={item.progress} status="active" />
-                    </Col>
-                  </Row>
-                }
-                key={index}
-              >
-                <Row gutter={16}>
-                  <Col span={18}>
-                    <div>
-                      <Tag color="#87d068">发布人：{item.poster.name}</Tag>
-                      <Tag color="#2db7f5">监管人员：{getDoer(item.users)}</Tag>
-                      <Tag color="#f50">最后期限：{item.deadline}</Tag>
-                    </div>
-                  </Col>
-                  <Col span={3}>
-                    <Button type="primary" 
-                      disabled={this._disable2Button(item.id)}
-                      onClick={() => this.patchProgress(item.id)}
-                    >保存进度</Button>
-                  </Col>
-                  <Col span={3}>
-                    <a href={"http://oa.app/zip/tasks/"+item.id} download="filename.zip">下载任务文件</a>
-                    {/*<Button type="default" 
-                                          onClick={() => onDownloadZip(item.id)}
-                                        ></Button>*/}
-                  </Col>
-                  <Col span={24} style={{marginTop: 20}}>
-                    <Timeline>   
-                      {this._renderStep(item, loginUser)}
-                    </Timeline>
-                  </Col>
-                </Row>
-              </Collapse.Panel>);
-          };
-          case 'dones': {
-
-          };
-          default: return;
-        }
+        return (
+          <Collapse.Panel 
+            header={
+              <Row>
+                <Col span={12}>
+                  {item.name}
+                </Col>
+                <Col span={12}>
+                  <Progress percent={item.progress} status="active" />
+                </Col>
+              </Row>
+            }
+            key={index}
+          >
+            <Row gutter={16}>
+              <Col span={18}>
+                <div>
+                  <Tag color="#87d068">发布人：{item.poster.name}</Tag>
+                  <Tag color="#2db7f5">监管人员：{getDoer(item.users)}</Tag>
+                  <Tag color="#f50">最后期限：{item.deadline}</Tag>
+                </div>
+              </Col>
+              <Col span={3}>
+                {loginUser.authority === 3 && <Button type="primary" 
+                  disabled={this._disable2Button(item.id)}
+                  onClick={() => this.patchProgress(item.id)}
+                >保存进度</Button>}
+              </Col>
+              <Col span={3}>
+                <a href={"http://oa.app/zip/tasks/"+item.id} download="filename.zip">下载任务文件</a>
+                {/*<Button type="default" 
+                                      onClick={() => onDownloadZip(item.id)}
+                                    ></Button>*/}
+              </Col>
+              <Col span={24} style={{marginTop: 20}}>
+                <Timeline>   
+                  {this._renderStep(item, loginUser)}
+                </Timeline>
+              </Col>
+            </Row>
+          </Collapse.Panel>);
       })
     }
   }
@@ -466,10 +460,10 @@ class Done extends Component{
               </div>
             </Col>
             <Col span={6}>
-              <a href={"http://oa.app/zip/tasks/"+item.id} download="filename.zip">下载任务文件</a>
-              {/*<Button type="default" 
-                                    onClick={() => onDownloadZip(item.id)}
-                                  ></Button>*/}
+              {/*<a href={"http://oa.app/zip/tasks/"+item.id} download="filename.zip">下载任务文件</a>*/}
+              {(loginUser.authority === 2 || loginUser.id === item.poster_id) && <Button type="default" 
+                  onClick={() => onCheck(item.id)}
+                >验收</Button>}
             </Col>
             <Col span={24} style={{marginTop: 20}}> 
               {this._renderStep(item, loginUser)}
@@ -618,9 +612,9 @@ class Post extends Component{
             </Col>
             <Col span={6}>
               <a href={"http://oa.app/zip/tasks/"+item.id} download="filename.zip">下载任务文件</a>
-              {/*<Button type="default" 
-                                    onClick={() => onDownloadZip(item.id)}
-                                  ></Button>*/}
+              {item.status === 5 && <Button type="default" 
+                  onClick={() => onCheck(item.id)}
+                >验收</Button>}
             </Col>
             <Col span={24} style={{marginTop: 20}}> 
               {this._renderStep(item, loginUser)}

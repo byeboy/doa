@@ -67,7 +67,7 @@ export default {
         yield put({
           type: 'querySuccess',
           payload: {
-            users: post.users,
+            users: post.users.filter(u => u.id !== user.id),
             loginUser: user,
             branches: branches,
           }
@@ -77,7 +77,7 @@ export default {
         yield put({
           type: 'querySuccess',
           payload: {
-            users: post.users,
+            users: post.users.filter(u => u.id !== user.id),
             loginUser: user,
             branches: branches,
           }

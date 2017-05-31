@@ -14,7 +14,7 @@ function Sider ({ authority, siderFold, darkTheme, location, changeTheme }) {
   return (
     <div>
       <div className={styles.logo}>
-        <img src={config.logoSrc} />
+        <img src="/cuber.svg" />
         {siderFold ? '' : <span>{config.logoText}</span>}
       </div>
       <Menus {...menusProps} />

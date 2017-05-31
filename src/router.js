@@ -26,7 +26,7 @@ function RouterConfig({ history }) {
     <Router history={history}>
       <Route path="/" component={App}>
         <IndexRoute component={Dashboard} />
-        <Route path="dashboard" component={Dashboard} />
+        // <Route path="dashboard" component={Dashboard} />
         <Route path="notices" component={Notices} />
         <Route path="products" component={Products} />
         <Route path="tasks" component={Tasks} />

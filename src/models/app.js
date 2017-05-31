@@ -1,6 +1,6 @@
 import * as serve from '../services/users';
-import { message } from 'antd';
-import { delay } from '../services/util';
+import { message, notification } from 'antd';
+import { delay, socket } from '../services/util';
 
 export default {
   namespace: 'app',
@@ -8,9 +8,9 @@ export default {
     login: sessionStorage.getItem('authorization') !== null,
     isMember: true,
     user: {
-      name: 'genggeng',
-      authority: 4,
+      authority: -1,
     },
+    modal2Rewrite: false,
     buttonLoading: false,
     menuPopoverVisible: false,
     siderFold: localStorage.getItem('antdAdminSiderFold') === 'true',
@@ -25,9 +25,9 @@ export default {
     setup ({dispatch}) {
       dispatch({type: 'auth'});
       window.onresize = function () {
-        dispatch({type: 'changeNavbar'})
+        dispatch({type: 'changeNavbar'});
       }
-    }
+    },
   },
   effects: {
     *changeMember ({
@@ -43,6 +43,16 @@ export default {
       const { status, headers } = response;
       if(success) {
 //        message.success(message);
+        yield call(socket, (data) => {
+          /*dispatch({ type: 'your action', payload: data });*/
+          const args = {
+            message: data.message,
+            description: data.description,
+            duration: 0,
+            ...data,
+          };
+          notification.info(args);
+        }, post.loginUser.id);
         yield put({
           type: 'authSuccess',
           payload: {
@@ -50,7 +60,7 @@ export default {
               id: post.loginUser.id,
               name: post.loginUser.name,
               branch_id: post.loginUser.branch_id,
-              authority: post.loginUser.branch === null ? 9 : post.loginUser.branch.authority,
+              authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
             },
           }
         })
@@ -61,21 +71,30 @@ export default {
     *login ({
       payload
     }, {call, put}) {
-      yield put({type: 'showButtonLoading'});
+      // yield put({type: 'showButtonLoading'});
       const { values } = payload;
-      console.log(values)
       const { data, response } = yield call(serve.login, values);
       const { success, post, message } = data;
       const { status, headers } = response;
       if (success) {
         message.success(message);
-        sessionStorage.setItem('authorization',headers.get('authorization'))
+        sessionStorage.setItem('authorization',headers.get('authorization'));
+        yield call(socket, (data) => {
+          /*dispatch({ type: 'your action', payload: data });*/
+          const args = {
+            message: data.message,
+            description: data.description,
+            duration: 0,
+            ...data,
+          };
+          notification.info(args);
+        });
         yield put({
           type: 'authSuccess',
           payload: {
             user: {
               ...post.loginUser,
-              authority: post.loginUser.branch === null ? 9 : post.loginUser.branch.authority,
+              authority: post.loginUser.branch === null ? 0 : post.loginUser.branch.authority,
             },
             message: message,
           }
@@ -90,7 +109,7 @@ export default {
     *reg ({
       payload
     }, {call, put}) {
-      yield put({type: 'showButtonLoading'});
+      // yield put({type: 'showButtonLoading'});
       const { values } = payload;
       const { data } = yield call(serve.reg, values);
       const { success, post, message } = data;
@@ -104,6 +123,20 @@ export default {
         yield put({
           type: 'regFail',
         })
+      }
+    },
+    *rewrite({ payload }, {call, put}) {
+      console.log('model' ,payload)
+      const { data } = yield call(serve.rewrite, payload);
+      console.log(data)
+      const { success, post, message } = data;
+      if (success) {
+        message.success(message);
+        yield put({
+          type: 'logout',
+        })
+      } else {
+        message.warning(message);
       }
     },
     *logout ({
@@ -183,26 +216,26 @@ export default {
     regFail (state) {
       return {
         ...state,
-        buttonLoading: false
+        buttonLoading: false,
       }
     },
-    loginFail (state) {
+    loginFail (state, action) {
       return {
         ...state,
         login: false,
-        buttonLoading: false
+        buttonLoading: false,
       }
     },
     showButtonLoading (state) {
       return {
         ...state,
-        buttonLoading: true
+        buttonLoading: true,
       }
     },
     hideButtonLoading (state) {
       return {
         ...state,
-        buttonLoading: false
+        buttonLoading: false,
       }
     },
     handleSwitchSider (state) {
@@ -236,6 +269,18 @@ export default {
         ...state,
         menuPopoverVisible: !state.menuPopoverVisible
       }
-    }
+    },
+    showModal2Rewrite(state) {
+      return {
+        ...state,
+        modal2Rewrite: true,
+      }
+    },
+    hideModal2Rewrite(state) {
+      return {
+        ...state,
+        modal2Rewrite: false,
+      }
+    },
   }
 }

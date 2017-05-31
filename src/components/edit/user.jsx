@@ -39,7 +39,7 @@ class UserEditer extends Component{
       selectOpts.push(<Select.Option key={i}>{'user'+i.toString(36)}</Select.Option>);
     }
     return (
-      <Modal title={item2Edit === null ? '发布公告':'编辑用户'} 
+      <Modal title={item2Edit === null ? '新建用户':'编辑用户'} 
              visible={modal2Edit}
              onCancel={onCancel}
              footer={[

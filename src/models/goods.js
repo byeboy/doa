@@ -50,7 +50,7 @@ export default {
   },
   reducers: {
     initSuccess(state, action) {
-      const {goodType, data} = action.payload;
+      const {goodType, user, data} = action.payload;
       function getNew(old, type, data){
         old.map(o => {
           if(o.key === type){
@@ -65,7 +65,8 @@ export default {
         tab: {
           ...state.tab,
           panes,
-        }
+        },
+        loginUser: user,
       }
     },
     saveSuccess(state, action) {
@@ -158,6 +159,7 @@ export default {
     },
     *query({ payload }, {put, call, select}) {
       const goodType = yield select(state => state.good.tab.activeKey);
+      const user = yield select(state=>state.app.user);
       const { data } = yield call(serve.query, goodType);
       const { success, post, message } = data;
       if(success) {
@@ -166,6 +168,7 @@ export default {
           type: 'initSuccess',
           payload: {
             goodType,
+            user,
             data: post[goodType],
           }
         })
@@ -190,6 +193,13 @@ export default {
         message.warning(data.message);
       }
     },
+    *exp({ payload }, {put, call}) {
+      const { data } = yield call(serve.exp);
+      const { success, message } = data;
+      if(success) {
+        message.success(message);
+      }
+    }
   },
   subscriptions: {
     setup({dispatch, history}) {

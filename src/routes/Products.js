@@ -6,7 +6,7 @@ import ProductEditer from '../components/edit/product'
 import styles from './common.less';
 
 function Products({ dispatch, product}) {
-  const { tab, modal, models, cabinets, fans, parts } = product;
+  const { tab, modal, models, cabinets, fans, parts, loginUser } = product;
   const { activeKey, panes } = tab;
   function onChange(activeKey) {
     const panes = product.tab.panes;
@@ -35,6 +35,7 @@ function Products({ dispatch, product}) {
     }
   };
   const actionProps = {
+    loginUser,
     onEdit(item, type, upType, upId){
       dispatch({
         type: 'product/showModal',

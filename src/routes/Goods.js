@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Tabs, Table } from 'antd';
+import { Card, Tabs, Table, Button, Icon } from 'antd';
 import Gooder from '../components/goods';
 import RecordEditer from '../components/edit/record';
 import styles from './common.less';
 
 function Goods({ dispatch, good}) {
-  const { tab, modal, models, cabinets, fans, parts } = good;
+  const { tab, modal, models, cabinets, fans, parts, loginUser } = good;
   const { activeKey, panes } = tab;
   function onChange(activeKey) {
     const panes = good.tab.panes;
@@ -26,6 +26,11 @@ function Goods({ dispatch, good}) {
       },
     })
   };
+  function onExp() {
+    dispatch ({
+      type: 'good/exp',
+    })
+  }
   const actionProps = {
     onEdit(item, goodType, recordType){
       dispatch({
@@ -37,9 +42,11 @@ function Goods({ dispatch, good}) {
         }
       })
     },
+    loginUser,
   };
   const editProps = {
     ...modal,
+    loginUser,
     handleCancel() {
       dispatch({
         type: 'good/hideModal',
@@ -53,7 +60,7 @@ function Goods({ dispatch, good}) {
     },
   };
   return (
-    <Card >
+    <Card extra={(loginUser.authority === 1 || loginUser.authority === 9) && <a href="http://oa.app/records/export"><Icon type="file-excel" />导出文件</a>}>
       <RecordEditer {...editProps}/>
       <Tabs
         onChange={onChange}

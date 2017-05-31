@@ -11,3 +11,7 @@ export async function save(payload) {
     body: JSON.stringify(item),
   });
 }
+
+export async function exp() {
+  return request('/api/records/export');
+}

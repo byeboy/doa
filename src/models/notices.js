@@ -106,8 +106,8 @@ export default {
         message.warning(message);
       }
       yield put({
-          type: 'hideLoading',
-        });
+        type: 'hideLoading',
+      });
       yield put({
         type: 'hideModal2Edit',
       });

@@ -303,7 +303,7 @@ function Tasks({ dispatch, loading, task}) {
             <Card title={<b><Icon type="bars"/>待验收任务</b>}
               loading={loading}
             >
-              {posts.length !== 0 ?
+              {dones.length !== 0 ?
                 <Tasker {...doneProps} {...actionProps}/> : 
                 <div><Icon type="smile-o" />暂无需验收的任务</div>
               }

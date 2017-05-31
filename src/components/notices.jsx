@@ -1,5 +1,5 @@
 import React, { PropTypes} from 'react'
-import { Collapse, Card, Icon, Tooltip } from 'antd'
+import { Collapse, Card, Icon, Tooltip, Tag } from 'antd'
 import { Link } from 'dva/router'
 
 const getItem = function(noticesArray, loginUser_id, type, onDelete, onEdit) {
@@ -8,7 +8,7 @@ const getItem = function(noticesArray, loginUser_id, type, onDelete, onEdit) {
       if(type === 'notices') {
         return (
           <Collapse.Panel key={item.id} header={
-              <p>{item.title} 【<i>{item.intro ? item.intro : '暂无描述'}</i>】
+              <p>{item.title} 
                 {loginUser_id === item.publisher_id &&
                 <span className="fr">
                   <Tooltip title="点击编辑">
@@ -20,15 +20,17 @@ const getItem = function(noticesArray, loginUser_id, type, onDelete, onEdit) {
                 </span>}
               </p>
             }>
-            <p>{item.content}</p>
-            <p className="txtr">
-              <Icon type="user" />
-              <i>
-              {item.publisher !== null ? 
+            <pre className="pre">简述：{item.intro ? item.intro : '暂无描述'}</pre>
+            <p className="indent2">{item.content}</p>
+            <div className="txtr">
+              <Tag color="#2db7f5">
+                <Icon type="user" />
+                {item.publisher !== null ? 
                   item.publisher.name : '暂无发布人信息'
-              }</i> | 
+                }
+              </Tag>
               <Icon type="clock-circle-o" /><i>{item.created_at}</i>
-            </p>
+            </div>
           </Collapse.Panel>
         )
       }

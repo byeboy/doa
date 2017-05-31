@@ -32,7 +32,7 @@ class Signin extends Component{
     return (
       <div className={styles.signForm}>
         <h1>欢迎登录</h1>
-        <h2>风林麦谷协同办公系统</h2>
+        {/*<h2>风林麦谷协同办公系统</h2>*/}
         <Form onSubmit={handleSubmit}>
           <Form.Item
             validateStatus={emailError ? 'error' : ''}

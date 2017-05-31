@@ -170,7 +170,7 @@ export class Producter extends Component{
     });
   }
   render() {
-    const { type, upType, upId, data, select, countRequired, onEdit, onDetail, onDelete, getRelation, onAddRelation, onPatchRelationCount } = this.props;
+    const { type, upType, upId, data, select, countRequired, onEdit, onDetail, onDelete, getRelation, onAddRelation, onPatchRelationCount, loginUser } = this.props;
     const { loading, selectedRowKeys } = this.state;
     const relationProps = {
       type,
@@ -197,9 +197,10 @@ export class Producter extends Component{
     };
     const hasSelected = selectedRowKeys.length > 0;
     const getColumns = (countRequired, type) => {
-      const columns = [{
+      let columns = [{
         title: '名称',
         dataIndex: 'name',
+        key: 'name',
         width: type !== 'files' ? 150 : '',
         filterDropdown: (
           <div className="custom-filter-dropdown">
@@ -215,9 +216,11 @@ export class Producter extends Component{
       }, {
         title: '简介',
         dataIndex: 'intro',
+        key: 'intro',
       }, {
         title: '所需数量',
         dataIndex: 'pivot.required_count',
+        key: 'required_count',
         width: 120,
         render: (text, record, index) => (
           <EditableCell
@@ -229,10 +232,11 @@ export class Producter extends Component{
       }, {
         title: '更新时间',
         dataIndex: 'updated_at',
+        key: 'updated_at',
         width: 200,
       }, {
         title: '操作',
-        dataIndex: 'operation',
+        key: 'action',
         width: 60,
         render: (text, record, index) => {
           const pane = getDetail(record, this.props.type, this.props.upType);
@@ -262,11 +266,11 @@ export class Producter extends Component{
         },
       }]
       if(!countRequired) {
-        columns.splice(2,1);
+        columns = columns.filter(c => c.key !== 'required_count');
       }
       switch(type) {
         case 'files':
-          columns.splice(1,1);
+          columns = columns.filter(c => c.key !== 'intro');
           break;
         default: break;
       }
@@ -276,18 +280,14 @@ export class Producter extends Component{
     const columns = getColumns(countRequired, type);
     return (
       <div>
-        <div className="actionBtns">
+        { loginUser.authority >= 5 && <div className="actionBtns">
           <Button type="primary"
             className={styles.editableAddBtn}
             disabled={hasSelected}
             onClick={() => onEdit(null, type, upType, upId)}
           ><Icon type="plus" />{(upType === null || type === 'files') ? '新增':'关联'}</Button>
-          <Button type="danger"
-            disabled={!hasSelected} 
-            loading={loading}
-          ><Icon type="delete" />删除</Button>
-          <span style={{ marginLeft: 8 }}>{hasSelected ? `已选择 ${selectedRowKeys.length} 项` : ''}</span>
-        </div>
+          
+        </div>}
         <Table rowSelection={rowSelection} 
           columns={columns} 
           dataSource={this.state.data} 
@@ -303,3 +303,9 @@ export class Producter extends Component{
 Producter.propTypes = {
   
 }
+
+// <Button type="danger"
+//             disabled={!hasSelected} 
+//             loading={loading}
+//           ><Icon type="delete" />删除</Button>
+//           <span style={{ marginLeft: 8 }}>{hasSelected ? `已选择 ${selectedRowKeys.length} 项` : ''}</span>

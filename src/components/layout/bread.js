@@ -31,7 +31,7 @@ function Bread ({ location }) {
   })
   const breads = pathNames.map((item, key) => {
     if (!(item in pathSet)) {
-      item = 'Dashboard'
+      item = 'Notices'
     }
     return (
       <Breadcrumb.Item key={key} {...((pathNames.length - 1 === key) || !pathSet[item].clickable) ? '' : { href: '#' + pathSet[item].path }}>

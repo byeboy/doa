@@ -15,7 +15,7 @@ class RecordEditer extends Component{
   }
     
   render() {
-    const { onSubmit, handleCancel, visible, item, goodType, recordType, loading } = this.props;
+    const { onSubmit, handleCancel, visible, item, goodType, recordType, loading, loginUser } = this.props;
     const { getFieldDecorator } = this.props.form;
     const getTitle = (item, goodType, recordType) => {
       if(!visible){
@@ -81,7 +81,7 @@ class RecordEditer extends Component{
               ...fieldsValue,
               type: recordType,
               id: item.id,
-              operator_id: 1,
+              operator_id: loginUser.id,
             }
           };
           console.log(sending)

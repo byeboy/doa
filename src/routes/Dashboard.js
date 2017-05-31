@@ -85,17 +85,7 @@ const doneProps = {
 function Dashboard() {  
   return (
     <div>
-      <Row gutter={16}>
-        <Col xs={24} sm={24} md={24} lg={24}><Noticer {...noticesProps}/></Col>
-      </Row>
-      <Row gutter={16}>
-        <Col xs={24} sm={24} md={12} lg={8}>
-          <Tasker {...todoProps}/>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={8}>
-          <Tasker {...doneProps}/>
-        </Col>
-      </Row>
+      <h1>欢迎使用办公自动化系统</h1>
     </div>
   );
 }

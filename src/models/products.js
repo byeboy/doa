@@ -70,6 +70,13 @@ export default {
     loginUser: {},
   },
   reducers: {
+    authSuccess(state, action) {
+      const { loginUser } = action.payload;
+      return {
+        ...state,
+        loginUser,
+      }
+    },
     initSuccess(state, action) {
       const {productType, data} = action.payload;
       function getNew(old, type, data){
@@ -322,6 +329,15 @@ export default {
     },
   },
   effects: {
+    *auth({ payload }, {call, put, select}) {
+      const loginUser = yield select(state => state.app.user);
+      yield put({
+        type: 'authSuccess',
+        payload: {
+          loginUser,
+        }
+      })
+    },
     *changePane({ payload }, {put, call}) {
       const { activeKey, queryOrNot } = payload;
       yield put({
@@ -469,6 +485,9 @@ export default {
       message.info('正在获取相关信息...');
       return history.listen(({ pathname }) => {
         if(pathname === '/products') {
+          dispatch({
+            type: 'auth'
+          });
           dispatch({
             type: 'closePanes'
           });

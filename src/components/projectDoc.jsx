@@ -6,7 +6,7 @@ class Docer extends Component{
   constructor(props){
     super(props);
     this.state = {
-      visible: true,
+      visible: false,
     }
   }
   onShow= () =>{
@@ -25,7 +25,7 @@ class Docer extends Component{
         <Tooltip title="点此查看项目说明文档">
           <Icon type="rocket" className="actionIcon success" onClick={this.onShow}/>
         </Tooltip>
-        <Modal title={<h1>风林麦谷协同办公系统</h1>} style={{ top: 20 }} width={'70%'} maskClosable={false}
+        <Modal title={<h1>面向工建企业的办公自动化系统</h1>} style={{ top: 20 }} width={'70%'} maskClosable={false}
                visible={this.state.visible}
                onCancel={this.handleCancel}
                footer={[
@@ -35,7 +35,7 @@ class Docer extends Component{
           <div className={styles.modal2Doc}>
             <session>
               <h2>项目简介(project description)</h2>
-              <p>该项目为个人毕业设计选题项目，主要用于工建企业的协同办公。</p>
+              <p>该项目为个人毕业设计选题项目，主要用于工建企业的办公自动化。</p>
             </session>
             <session>
               <h2>系统说明(system instructions)</h2>

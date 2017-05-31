@@ -44,7 +44,6 @@ function Recorder({data}) {
 		title: '记录时间',
 		dataIndex: 'created_at',
 		width: '20%',
-		sorter: (a, b) => a.created_at.length - b.created_at.length,
 	}, {
 		title: '操作人',
 		dataIndex: 'operator.name',
@@ -110,66 +109,73 @@ class Gooder extends Component {
 //      console.log(index)
   }
   render() {
-    const { type, onEdit } = this.props;
+    const { type, onEdit, loginUser } = this.props;
     const { loading, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
-    const columns = [{ 
-    	title: '名称', 
-    	dataIndex: 'name', 
-    	key: 'name',
-    	width: '10%',
-    	filterDropdown: (
-        <div className="custom-filter-dropdown">
-         <Input.Search
-            placeholder="在此检索"
-            style={{ width: 200 }}
-            onSearch={value => this.onSearch(value)}
-          />
-        </div>
-      ),
-      filterDropdownVisible: this.state.filterDropdownVisible,
-      onFilterDropdownVisibleChange: visible => this.setState({ filterDropdownVisible: visible }), 
-    }, { 
-    	title: '库存', 
-    	dataIndex: 'count', 
-    	key: 'count',
-    	width: '10%'
-    }, { 
-    	title: '最近更新', 
-    	dataIndex: 'updated_at', 
-    	key: 'updated_at',
-    	width: '20%',
-    }, { 
-    	title: '备注', 
-    	dataIndex: 'remark', 
-    	key: 'remark',
-    	width: '55%'
-    }, { 
-    	title: '操作', 
-    	key: 'operation',
-    	width: '5%',
-    	render: (text, record, index) => {
-        return (
-          <Dropdown overlay={
-           <Menu>
-            <Menu.Item>
-              <a onClick={() => onEdit(record, type, 1)}>入库</a>
-            </Menu.Item>
-            <Menu.Item>
-              <a onClick={() => onEdit(record, type, 0)}>出库</a>
-            </Menu.Item>
-          </Menu>}>
-            <a>
-              <Icon type="bars" /><Icon type="down" />
-            </a>
-          </Dropdown>
-        );
-      },
-    }];
+    const getColumns = (loginUser) => {
+      let columns = [{ 
+        title: '名称', 
+        dataIndex: 'name', 
+        key: 'name',
+        width: '10%',
+        filterDropdown: (
+          <div className="custom-filter-dropdown">
+           <Input.Search
+              placeholder="在此检索"
+              style={{ width: 200 }}
+              onSearch={value => this.onSearch(value)}
+            />
+          </div>
+        ),
+        filterDropdownVisible: this.state.filterDropdownVisible,
+        onFilterDropdownVisibleChange: visible => this.setState({ filterDropdownVisible: visible }), 
+      }, { 
+        title: '库存', 
+        dataIndex: 'count', 
+        key: 'count',
+        width: '10%'
+      }, { 
+        title: '最近更新', 
+        dataIndex: 'updated_at', 
+        key: 'updated_at',
+        width: '20%',
+      }, { 
+        title: '备注', 
+        dataIndex: 'remark', 
+        key: 'remark',
+        width: '55%'
+      }, { 
+        title: '操作', 
+        key: 'action',
+        width: '5%',
+        render: (text, record, index) => {
+          return (
+            <Dropdown overlay={
+             <Menu>
+              <Menu.Item>
+                <a onClick={() => onEdit(record, type, 1)}>入库</a>
+              </Menu.Item>
+              <Menu.Item>
+                <a onClick={() => onEdit(record, type, 0)}>出库</a>
+              </Menu.Item>
+            </Menu>}>
+              <a>
+                <Icon type="bars" /><Icon type="down" />
+              </a>
+            </Dropdown>
+          );
+        },
+      }];
+      if(loginUser.authority !== 1) {
+        columns = columns.filter(c => c.key !== 'action');
+      }
+      return columns;
+    };
+    const columns = getColumns(loginUser);
     return (
       <div>
         <Table

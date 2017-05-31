@@ -5,24 +5,24 @@ import moment from 'moment'
 const authority = [
   {
     key: 1,
-    name: '高级管理层',
-    authority: 9,
+    name: '技术组',
+    authority: 5,
   },{
     key: 2,
-    name: '管理承接层',
-    authority: 7,
+    name: '计划组',
+    authority: 4,
   },{
     key: 3,
-    name: '后勤服务层',
+    name: '生产组',
     authority: 3,
   },{
     key: 4,
-    name: '业务整合层',
-    authority: 1,
+    name: '监察组',
+    authority: 2,
   },{
     key: 5,
-    name: '待分配职员专用',
-    authority: 0,
+    name: '仓储组',
+    authority: 1,
   },
 ];
 

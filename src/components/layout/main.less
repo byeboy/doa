@@ -161,6 +161,8 @@
     }
     box-shadow: @shadow-2;
     position: relative;
+    height: 47px;
+    background: white;
 
     .siderbutton {
       height: 47px;
@@ -175,6 +177,20 @@
       &:hover {
         color: @primary-color;
         background-color: fade(@primary-color, 15%);
+      }
+    }
+
+    .user {
+      float: right;
+      height: 47px;
+      width: 47px;
+      background: #F50;
+      line-height: 47px;
+      text-align: center;
+      font-size: 20px;
+      cursor: pointer;
+      a {
+        color: white;
       }
     }
   }

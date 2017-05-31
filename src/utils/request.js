@@ -11,7 +11,6 @@ function checkStatus(response) {
     sessionStorage.removeItem('authorization');
     window.location.href = '/';
   }
-
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
@@ -48,21 +47,12 @@ export default async function request(url, options) {
     }
   }
   const response = await fetch(url, options);
- 
   checkStatus(response);
- 
   const data = await response.json();
-
   parseErrorMessage({data});
- 
   const ret = {
     data,
     response: response,
   };
- 
-/*  if (response.headers.get('x-total-count')) {
-    ret.headers['x-total-count'] = response.headers.get('x-total-count');
-  }*/
- 
   return ret;
 }

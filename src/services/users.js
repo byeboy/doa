@@ -37,3 +37,11 @@ export async function update(payload) {
     body: JSON.stringify(values),
   });
 }
+
+export async function rewrite(payload) {
+  const { values, id } = payload;
+  return request(`/api/rewrite/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(values),
+  });
+}

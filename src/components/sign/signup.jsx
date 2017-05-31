@@ -44,7 +44,7 @@ class Signup extends Component{
     
     return ( 
       <div className={styles.signForm}>
-        <h1>欢迎加入风林麦谷协同办公系统</h1>
+        <h1>欢迎加入系统</h1>
         <Form onSubmit={handleSubmit}>
           <Form.Item
             validateStatus={emailError ? 'error' : ''}
@@ -52,7 +52,7 @@ class Signup extends Component{
           >
             {getFieldDecorator('email', {
               rules: [{ 
-                required: true, message: '电子邮箱不可为空' 
+                required: true, message: '电子邮箱不可为空',
               }, {
                 type: 'email', message: '输入内容非合法邮箱',
               }],
@@ -65,7 +65,11 @@ class Signup extends Component{
             help={nameError || ''}
           >
             {getFieldDecorator('name', {
-              rules: [{ required: true, message: '请输入真实姓名' }],
+              rules: [{ 
+                required: true, message: '请输入真实姓名' 
+              }, {
+                whitespace: true, message: '真实姓名中不应存在空格',
+              }],
             })(
               <Input addonBefore="真实姓名" type="text" placeholder="请输入真实姓名" />
             )}
@@ -75,7 +79,11 @@ class Signup extends Component{
             help={phoneError || ''}
           >
             {getFieldDecorator('phone', {
-              rules: [{ required: true, message: '请输入联系方式' }],
+              rules: [{ 
+                required: true, message: '请输入联系方式' 
+              }, {
+                whitespace: true, message: '联系方式中不应存在空格',
+              }],
             })(
               <Input addonBefore="联系方式" type="text" placeholder="请输入联系方式" />
             )}
@@ -85,7 +93,13 @@ class Signup extends Component{
             help={passwordError || ''}
           >
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: '请输入密码' }],
+              rules: [{ 
+                required: true, message: '请输入密码' 
+              }, {
+                min: 6, message: '请设置6位以上的密码',
+              }, {
+                whitespace: true, message: '密码中不应存在空格',
+              }],
             })(
               <Input addonBefore="设置密码" type="password" placeholder="设置一个6位以上的密码" />
             )}

@@ -1,45 +1,59 @@
 module.exports = [
-  {
+  /*{
     key: 'dashboard',
     name: '仪表盘',
     icon: 'laptop',
-    permission: 1,
-  },
+    permission: [
+      1, 2, 3, 4, 5, 9
+    ],
+  },*/
   {
     key: 'notices',
     name: '最新公告',
     icon: 'notification',
-    permission: 1,
+    permission: [
+      1, 2, 3, 4, 5, 9
+    ],
   },
   {
     key: 'products',
     name: '产品管理',
     icon: 'global',
-    permission: 1,
+    permission: [
+      5, 9
+    ],
   },
   {
     key: 'tasks',
     name: '任务清单',
     icon: 'solution',
-    permission: 1,
+    permission: [
+      2, 3, 4, 9
+    ],
   },
   {
     key: 'branches',
     name: '部门详情',
     icon: 'share-alt',
-    permission: 1,
+    permission: [
+      9
+    ],
   },
   {
     key: 'users',
     name: '职员一览',
     icon: 'team',
-    permission: 1,
+    permission: [
+      1, 2, 3, 4, 5, 9
+    ],
   },
   {
     key: 'goods',
     name: '仓储信息',
     icon: 'appstore-o',
-    permission: 1,
+    permission: [
+      1, 2, 3, 4, 5, 9
+    ],
   },
   /*{
     key: 'navigation',

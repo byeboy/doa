@@ -24,6 +24,20 @@ html, body, :global(#root) {
   text-align: right;
 }
 
+:global(.pre) {
+  width: 100%;
+  min-height:40px;
+  line-height: 40px;
+  background: #eeeeee;
+  margin: 10px auto;
+  border-left: 4px #F50 solid;
+  text-indent: 1em;
+}
+
+:global(.indent2) {
+  text-indent: 2em;
+}
+
 :global(.ant-row) {
   margin: 20px -8px;
 }

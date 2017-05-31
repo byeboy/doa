@@ -194,7 +194,7 @@ export default {
               todos: todos,
               dones: dones,
               posts: post.posts,
-              users: users,
+              users: users.filter(u => u.branch_id != null),
             },
           })
         } else {
@@ -205,7 +205,7 @@ export default {
               todos: todos,
               dones: dones,
               posts: post.posts,
-              users: users,
+              users: users.filter(u => u.branch_id != null),
             },
           })
         }
